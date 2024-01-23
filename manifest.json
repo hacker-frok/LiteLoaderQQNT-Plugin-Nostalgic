@@ -16,9 +16,8 @@
   "repository": {
     "repo": "hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic",
     "branch": "main",
-    "use_release": {
-        "tag": "1.0.0",
-        "name": "LiteLoaderQQNT-Plugin-Nostalgic-main.zip"
+    "release": {
+      "tag": "latest"
     }
   },
   "platform": [
