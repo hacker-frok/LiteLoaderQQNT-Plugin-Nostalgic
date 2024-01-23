@@ -14,3 +14,7 @@
 
 
 
+
+https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/b7cf0d1b-88f9-4056-9d43-080db68433c5
+
+
