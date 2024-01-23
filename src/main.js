@@ -1,8 +1,11 @@
 const { BrowserWindow, ipcMain } = require('electron')
 const fs = require('fs')
 const path = require('path')
+
+let userInfo=undefined
+
 function log(...args) {
-    console.log(`[QQ怀旧模式]`, ...args);
+    console.log(`\x1b[35m[QQ怀旧模式]\x1b[0m`, ...args);
 }
 
 function updateStyle(webContents, settingsPath) {
@@ -39,7 +42,7 @@ function updateStyle(webContents, settingsPath) {
             );
         });
     } catch (error) {
-        console.log(error.message)
+        log(error.message)
     }
 
 }
@@ -85,19 +88,13 @@ ipcMain.on(
         updateStyle(window.webContents, settingsPath);
     }
 );
-ipcMain.on(
-    "LiteLoader.nostalgic.reSize",
-    (event) => {
-        const win = BrowserWindow.getFocusedWindow();
-        win.setSize(310, "800", true);
-    }
-);
 
 // 监听渲染进程的updateStyle事件
 ipcMain.on(
     "LiteLoader.nostalgic.updateStyle",
     (event, settingsPath) => {
         const window = BrowserWindow.fromWebContents(event.sender);
+       
         updateStyle(window.webContents, settingsPath);
     });
 
@@ -121,6 +118,7 @@ ipcMain.handle(
     "LiteLoader.nostalgic.getSettings",
     (event, message) => {
         try {
+            //log("LiteLoader.nostalgic.getSettings",userInfo)
             const data = fs.readFileSync(settingsPath, "utf-8");
             const config = JSON.parse(data);
             return config;
@@ -147,6 +145,13 @@ ipcMain.handle(
     "LiteLoader.nostalgic.logToMain",
     (event, ...args) => {
         log(...args);
+    }
+);
+ipcMain.handle(
+    "LiteLoader.nostalgic.getProfileDetailInfo",
+    (event) => {
+        //log("LiteLoader.nostalgic.getProfileDetailInfo",userInfo)
+        return userInfo;
     }
 );
 
@@ -177,6 +182,18 @@ function watchSettingsChange(webContents, settingsPath) {
 
 // 创建窗口时触发
 module.exports.onBrowserWindowCreated = window => {
+   
+    const original_send = window.webContents.send;
+    const patched_send = (channel, ...args) => {
+        if(JSON.stringify(args).includes('nodeIKernelProfileListener/onProfileDetailInfoChanged')){
+            //console.log(args?.[1]?.[0]?.payload.info,JSON.stringify(args?.[1]?.[0]?.payload))
+            userInfo=args?.[1]?.[0]?.payload.info
+           // log("用户信息更新",userInfo)
+        }
+        return original_send.call(window.webContents, channel, ...args);
+    };
+    window.webContents.send = patched_send;
+    
     const settingsPath = path.join(pluginDataPath, "settings.json");
     window.on("ready-to-show", () => {
         const url = window.webContents.getURL();
@@ -185,4 +202,5 @@ module.exports.onBrowserWindowCreated = window => {
             watchSettingsChange(window.webContents, settingsPath);
         }
     });
+
 }

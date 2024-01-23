@@ -1,6 +1,5 @@
 # LiteLoaderQQNT-Plugin-Nostalgic
 
-### 该插件需要安装前置插件[LLAPI](https://github.com/Night-stars-1/LiteLoaderQQNT-Plugin-LLAPI)
 
 ### 让NTQQ变回旧版本QQ(非NT版本)的界面布局，让喜欢旧版QQ的朋友回味无穷
 ### 目前仅支持LiteLoaderQQNT1.0.0及以上版本

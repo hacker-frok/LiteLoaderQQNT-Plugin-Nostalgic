@@ -1,11 +1,10 @@
 
-
 const plugin_path = LiteLoader.plugins["nostalgic"].path.plugin;
-
 function log(...args) {
-  console.log(`[QQ怀旧模式]`, ...args);
+  console.log(`\x1b[35m[QQ怀旧模式]\x1b[0m`, ...args);
   nostalgic.logToMain(...args);
 }
+
 
 const settings = await nostalgic.getSettings();
 const onload = async () => {
@@ -24,86 +23,63 @@ const onload = async () => {
     } else if (LiteLoader.os.platform === "darwin") {
       osType = "mac";
       //不支持mac
+      log('不支持macOS')
       return
     }
-    const Interval = setInterval(() => {
-      if (!(LiteLoader?.plugins?.LLAPI)) {
-        if(!location.hash.includes("#/main/message"))return
-        setTimeout(() => {
-          if (confirm("[QQ怀旧模式]插件依赖LLAPI，您没有安装LLAPI插件，请先安装")) {
-            try {
-              StoreAPI.openStore("LLAPI");
-            } catch (error) {
-  
-            }
-          }
-        }, 1000);
-      }
-      clearInterval(Interval);
-      return
-    }, 1000);
-    const findFuncMenuInterval = setInterval(() => {
+    const findFuncMenuInterval = setInterval(async() => {
 
-      if (location.hash.includes("#/main/message")) {
+      if (location.hash.includes("#/main/message")&&nostalgic.getProfileDetailInfo) {
+        const userinfo =await nostalgic.getProfileDetailInfo()
+        if(!userinfo)return
         clearInterval(findFuncMenuInterval)
         // 插入
         const topbar = document.querySelector('.contact-top-bar')
         try {
-          if (LLAPI == undefined) {
-            return
-          }
-          LLAPI.getAccountInfo().then((data) => {
-            if (data.uid == undefined) {
-              return
+          //log(JSON.stringify(userinfo))
+          headerHTML = headerHTML.replace("{nickName}", userinfo?.nick)
+          headerHTML = headerHTML.replace("{bio}", userinfo?.longNick || '这家伙很懒,什么也没留下')
+          headerHTML = headerHTML.replace("{vip}", userinfo?.svipFlag ? 'svip' : (userinfo.vipFlag ? 'vip' : ''))
+          // 页面加载完成时触发
+          const element = document.createElement("style");
+          element.id = "nostalgic-style"
+          document.head.appendChild(element);
+          nostalgic.updateStyle((event, message) => {
+            element.textContent = message;
+          });
+          topbar.insertAdjacentHTML('afterbegin', headerHTML)
+          document.querySelector('#app').insertAdjacentHTML('afterbegin', `<div class="nostalgic-qq-icon"><i class="q-icon icon"  style="--b4589f60: inherit;--6ef2e80d: 15px;"><svg t="1705867520276" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3650" width="14" height="14"><path d="M931.507451 840.8889c-23.05197 2.785996-89.719883-105.481862-89.719883-105.481862 0 62.689918-32.271958 144.493811-102.101866 203.571733 33.683956 10.383986 109.685856 38.33395 91.60588 68.84191-14.631981 24.685968-251.019672 15.761979-319.263582 8.07399-68.243911 7.68799-304.631601 16.611978-319.263582-8.07399-18.089976-30.49996 57.835924-58.427924 91.56588-68.82991-69.839909-59.077923-102.117866-140.889816-102.117866-203.583733 0 0-66.667913 108.267858-89.717883 105.481862-10.739986-1.299998-24.847967-59.287922 18.693975-199.407739 20.521973-66.047914 43.989942-120.955842 80.287895-211.557724C185.366427 196.125743 281.964301 0.012 512 0c227.473702 0.012 326.311573 192.265748 320.527581 429.925437 36.235953 90.445882 59.823922 145.699809 80.287894 211.555724 43.535943 140.119817 29.431961 198.105741 18.691976 199.407739z" p-id="3651" fill="#e6e6e6"></path></svg></i></div>`)
+          const getHeadImgInterval = setInterval(() => {
+            const headimgurl = document.querySelector('.avatar')?.style.backgroundImage
+            if (!headimgurl.includes("renderer/img/default_avatar")) {
+              clearInterval(getHeadImgInterval)
+              document.querySelector(".nostalgic-user-avatar-img").style.backgroundImage = headimgurl
+              let style = window.getComputedStyle(document.querySelector('.avatar__status'), null);
+              document.querySelector(".nostalgic-user-avatar__status").style.backgroundImage = style?.backgroundImage
             }
-            console.log(data)
-            LLAPI.getUserInfo(data.uid).then((userinfo) => {
-              console.log(userinfo)
-              headerHTML = headerHTML.replace("{nickName}", userinfo?.nickName)
-              headerHTML = headerHTML.replace("{bio}", userinfo?.bio || '这家伙很懒,什么也没留下')
-              headerHTML = headerHTML.replace("{vip}", userinfo?.raw?.svipFlag ? 'svip' : (userinfo.raw?.vipFlag ? 'vip' : ''))
-              // 页面加载完成时触发
-              const element = document.createElement("style");
-              element.id = "nostalgic-style"
-              document.head.appendChild(element);
-              nostalgic.updateStyle((event, message) => {
-                element.textContent = message;
-              });
-              topbar.insertAdjacentHTML('afterbegin', headerHTML)
-              document.querySelector('#app').insertAdjacentHTML('afterbegin', `<div class="nostalgic-qq-icon"><i class="q-icon icon"  style="--b4589f60: inherit;--6ef2e80d: 15px;"><svg t="1705867520276" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3650" width="14" height="14"><path d="M931.507451 840.8889c-23.05197 2.785996-89.719883-105.481862-89.719883-105.481862 0 62.689918-32.271958 144.493811-102.101866 203.571733 33.683956 10.383986 109.685856 38.33395 91.60588 68.84191-14.631981 24.685968-251.019672 15.761979-319.263582 8.07399-68.243911 7.68799-304.631601 16.611978-319.263582-8.07399-18.089976-30.49996 57.835924-58.427924 91.56588-68.82991-69.839909-59.077923-102.117866-140.889816-102.117866-203.583733 0 0-66.667913 108.267858-89.717883 105.481862-10.739986-1.299998-24.847967-59.287922 18.693975-199.407739 20.521973-66.047914 43.989942-120.955842 80.287895-211.557724C185.366427 196.125743 281.964301 0.012 512 0c227.473702 0.012 326.311573 192.265748 320.527581 429.925437 36.235953 90.445882 59.823922 145.699809 80.287894 211.555724 43.535943 140.119817 29.431961 198.105741 18.691976 199.407739z" p-id="3651" fill="#e6e6e6"></path></svg></i></div>`)
-              const getHeadImgInterval = setInterval(() => {
-                const headimgurl = document.querySelector('.avatar')?.style.backgroundImage
-                if (!headimgurl.includes("renderer/img/default_avatar")) {
-                  clearInterval(getHeadImgInterval)
-                  document.querySelector(".nostalgic-user-avatar-img").style.backgroundImage = headimgurl
-                  let style = window.getComputedStyle(document.querySelector('.avatar__status'), null);
-                  document.querySelector(".nostalgic-user-avatar__status").style.backgroundImage = style?.backgroundImage
-                }
 
-              }, 200);
+          }, 200);
 
-              nostalgic.rendererReady();
-              //nostalgic.reSize()
-              window.resizeTo(310, window.outerHeight < 650 ? 825 : window.outerHeight)
+          nostalgic.rendererReady();
+          //nostalgic.reSize()
+          window.resizeTo(310, window.outerHeight < 650 ? 825 : window.outerHeight)
 
-              if (!settings.initShow) {
-                settings.initShow = true
-                nostalgic.setSettings(settings);
-                setTimeout(() => {
-                  alert("您已使用QQ怀旧模式,将鼠标放到头像上来显示侧栏＾-＾")
-                }, 2000);
+          if (!settings.initShow) {
+            settings.initShow = true
+            nostalgic.setSettings(settings);
+            setTimeout(() => {
+              alert("您已使用QQ怀旧模式,将鼠标放到头像上来显示侧栏＾-＾")
+            }, 2000);
 
-              }
+          }
 
-            })
-          })
+
         } catch (error) {
           log("[渲染进程错误]", error);
         }
       }
 
 
-    }, 100)
+    }, 300)
 
   }
 }
@@ -113,8 +89,8 @@ const refreshDataT = setInterval(() => {
   if (LiteLoader.os.platform === "darwin") {
     clearInterval(refreshDataT)
   }
- 
-  if (location.hash.includes("#/main/message")&&LiteLoader?.plugins?.LLAPI) {
+
+  if (location.hash.includes("#/main/message")) {
     try {
       const styleWin = document.querySelector('.two-col-layout__aside')?.style?.cssText ?? ""
       const switchBtn = document.querySelector('path[d^="M6 3H12.4C12.6965"]')?.parentElement?.parentElement?.parentElement
@@ -149,7 +125,7 @@ const refreshDataT = setInterval(() => {
     } catch (error) {
       log(error)
     }
-  }else{
+  } else {
     //clearInterval(refreshDataT)
   }
 
@@ -158,7 +134,7 @@ const refreshDataT = setInterval(() => {
 
 // 打开设置界面时触发
 export const onSettingWindowCreated = async view => {
-
+  log('打开设置界面')
   try {
     //设置设置界面的图标
     document.querySelectorAll(".nav-item.liteloader").forEach(node => {
