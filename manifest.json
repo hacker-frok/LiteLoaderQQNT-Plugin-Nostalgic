@@ -4,7 +4,7 @@
   "name": "QQ怀旧模式",
   "slug": "nostalgic",
   "description": "让NTQQ变回旧版本QQ(非NT版本)的界面布局，让喜欢旧版QQ的朋友回味无穷.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icon": "./icon.png",
   "thumbnail": "./icon.png",
   "authors": [
