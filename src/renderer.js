@@ -20,7 +20,6 @@ if (window.location.href.includes("app://./renderer/index.html")) {
       clearInterval(findFuncMenuInterval)
       // 插入
       const topbar = document.querySelector('.contact-top-bar')
-
       try {
         if (LLAPI == undefined) {
           return
@@ -33,7 +32,7 @@ if (window.location.href.includes("app://./renderer/index.html")) {
           LLAPI.getUserInfo(data.uid).then((userinfo) => {
             console.log(userinfo)
             headerHTML = headerHTML.replace("{nickName}", userinfo?.nickName)
-            headerHTML = headerHTML.replace("{bio}", userinfo?.bio ? userinfo.bio:'这家伙很懒,什么也没留下')
+            headerHTML = headerHTML.replace("{bio}", userinfo?.bio || '这家伙很懒,什么也没留下')
             headerHTML = headerHTML.replace("{vip}", userinfo?.raw?.svipFlag ? 'svip' : (userinfo.raw?.vipFlag ? 'vip' : ''))
             // 页面加载完成时触发
             const element = document.createElement("style");
@@ -45,14 +44,12 @@ if (window.location.href.includes("app://./renderer/index.html")) {
             topbar.insertAdjacentHTML('afterbegin', headerHTML)
             document.querySelector('#app').insertAdjacentHTML('afterbegin', `<div class="nostalgic-qq-icon"><i class="q-icon icon"  style="--b4589f60: inherit;--6ef2e80d: 15px;"><svg t="1705867520276" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3650" width="14" height="14"><path d="M931.507451 840.8889c-23.05197 2.785996-89.719883-105.481862-89.719883-105.481862 0 62.689918-32.271958 144.493811-102.101866 203.571733 33.683956 10.383986 109.685856 38.33395 91.60588 68.84191-14.631981 24.685968-251.019672 15.761979-319.263582 8.07399-68.243911 7.68799-304.631601 16.611978-319.263582-8.07399-18.089976-30.49996 57.835924-58.427924 91.56588-68.82991-69.839909-59.077923-102.117866-140.889816-102.117866-203.583733 0 0-66.667913 108.267858-89.717883 105.481862-10.739986-1.299998-24.847967-59.287922 18.693975-199.407739 20.521973-66.047914 43.989942-120.955842 80.287895-211.557724C185.366427 196.125743 281.964301 0.012 512 0c227.473702 0.012 326.311573 192.265748 320.527581 429.925437 36.235953 90.445882 59.823922 145.699809 80.287894 211.555724 43.535943 140.119817 29.431961 198.105741 18.691976 199.407739z" p-id="3651" fill="#e6e6e6"></path></svg></i></div>`)
             const getHeadImgInterval = setInterval(() => {
-
-              const headimgurl = document.querySelector('.avatar').style?.backgroundImage
+              const headimgurl = document.querySelector('.avatar')?.style.backgroundImage
               if (!headimgurl.includes("renderer/img/default_avatar")) {
                 clearInterval(getHeadImgInterval)
                 document.querySelector(".nostalgic-user-avatar-img").style.backgroundImage = headimgurl
-
                 let style = window.getComputedStyle(document.querySelector('.avatar__status'), null);
-                document.querySelector(".nostalgic-user-avatar__status").style.backgroundImage = style.backgroundImage
+                document.querySelector(".nostalgic-user-avatar__status").style.backgroundImage = style?.backgroundImage
               }
 
             }, 200);
@@ -98,35 +95,33 @@ setInterval(() => {
   const funcMenu = document.querySelector('.func-menu')
   if (funcMenu) {
     try {
-      const styleWin = document.querySelector('.two-col-layout__aside').style.cssText
-      const switchBtn = document.querySelector('path[d="M6 3H12.4C12.6965 3 12.8588 3.00078 12.9754 3.0103L12.9886 3.01145L12.9897 3.02463C12.9992 3.14122 13 3.30347 13 3.6V12.4C13 12.6965 12.9992 12.8588 12.9897 12.9754L12.9886 12.9886L12.9754 12.9897C12.8588 12.9992 12.6965 13 12.4 13H6L6 3ZM5 2H6H12.4C12.9601 2 13.2401 2 13.454 2.10899C13.6422 2.20487 13.7951 2.35785 13.891 2.54601C14 2.75992 14 3.03995 14 3.6V12.4C14 12.9601 14 13.2401 13.891 13.454C13.7951 13.6422 13.6422 13.7951 13.454 13.891C13.2401 14 12.9601 14 12.4 14H6H5H3.6C3.03995 14 2.75992 14 2.54601 13.891C2.35785 13.7951 2.20487 13.6422 2.10899 13.454C2 13.2401 2 12.9601 2 12.4V3.6C2 3.03995 2 2.75992 2.10899 2.54601C2.20487 2.35785 2.35785 2.20487 2.54601 2.10899C2.75992 2 3.03995 2 3.6 2H5ZM5 13H3.6C3.30347 13 3.14122 12.9992 3.02463 12.9897L3.01145 12.9886L3.0103 12.9754C3.00078 12.8588 3 12.6965 3 12.4V3.6C3 3.30347 3.00078 3.14122 3.0103 3.02463L3.01145 3.01145L3.02463 3.0103C3.14122 3.00078 3.30347 3 3.6 3H5L5 13Z"]').parentElement.parentElement.parentElement
+      const styleWin = document.querySelector('.two-col-layout__aside')?.style?.cssText??""
+      const switchBtn = document.querySelector('path[d="M6 3H12.4C12.6965 3 12.8588 3.00078 12.9754 3.0103L12.9886 3.01145L12.9897 3.02463C12.9992 3.14122 13 3.30347 13 3.6V12.4C13 12.6965 12.9992 12.8588 12.9897 12.9754L12.9886 12.9886L12.9754 12.9897C12.8588 12.9992 12.6965 13 12.4 13H6L6 3ZM5 2H6H12.4C12.9601 2 13.2401 2 13.454 2.10899C13.6422 2.20487 13.7951 2.35785 13.891 2.54601C14 2.75992 14 3.03995 14 3.6V12.4C14 12.9601 14 13.2401 13.891 13.454C13.7951 13.6422 13.6422 13.7951 13.454 13.891C13.2401 14 12.9601 14 12.4 14H6H5H3.6C3.03995 14 2.75992 14 2.54601 13.891C2.35785 13.7951 2.20487 13.6422 2.10899 13.454C2 13.2401 2 12.9601 2 12.4V3.6C2 3.03995 2 2.75992 2.10899 2.54601C2.20487 2.35785 2.35785 2.20487 2.54601 2.10899C2.75992 2 3.03995 2 3.6 2H5ZM5 13H3.6C3.30347 13 3.14122 12.9992 3.02463 12.9897L3.01145 12.9886L3.0103 12.9754C3.00078 12.8588 3 12.6965 3 12.4V3.6C3 3.30347 3.00078 3.14122 3.0103 3.02463L3.01145 3.01145L3.02463 3.0103C3.14122 3.00078 3.30347 3 3.6 3H5L5 13Z"]')?.parentElement?.parentElement?.parentElement
       const areaBtn = document.querySelector('.window-control-area')
       const areaBtns = document.querySelectorAll('.window-control-area i')
       if (!styleWin?.includes("--max-width-aside: 320px")) {
-        switchBtn.style.display = 'none'
+        switchBtn?.style && (switchBtn.style.display = 'none')
         if (settings.useOldTheme) {
-          areaBtn.style.backgroundColor = "none!important"
+          areaBtn?.style && (areaBtn.style.backgroundColor = "none!important")
           for (let i = 0; i < areaBtns.length; i++) {
-           
             areaBtns[i].style.color = "var(--header-oldTheme-background-color-light)"
           }
         }
 
       } else {
-        switchBtn.style.display = ''
+        switchBtn?.style && (switchBtn.style.display = '')
         if (settings.useOldTheme) {
           for (let i = 0; i < areaBtns.length; i++) {
-            areaBtns[i].style.color = "var(--5f831aae)"
+            areaBtns[i].style.color &&= "var(--5f831aae)"
           }
-          areaBtn.style.backgroundColor = "var( --header-oldTheme-color)!important"
+          areaBtn?.style && (areaBtn.style.backgroundColor = "var( --header-oldTheme-color)!important")
         }
       }
-      const headimgurl = document.querySelector('.avatar').style?.backgroundImage
+      const headimgurl = document.querySelector('.avatar')?.style.backgroundImage
       if (!headimgurl.includes("renderer/img/default_avatar")) {
         document.querySelector(".nostalgic-user-avatar-img").style.backgroundImage = headimgurl
-
-        let style = window.getComputedStyle(document.querySelector('.avatar__status'), null);
-        document.querySelector(".nostalgic-user-avatar__status").style.backgroundImage = style.backgroundImage
+        const style = window.getComputedStyle(document.querySelector('.avatar__status'), null);
+        document.querySelector(".nostalgic-user-avatar__status").style.backgroundImage = style?.backgroundImage
       }
     } catch (error) {
       log(error)
