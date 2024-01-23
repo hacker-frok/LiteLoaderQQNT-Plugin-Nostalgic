@@ -1,0 +1,77 @@
+<style>
+
+    .pick-opacity {
+        padding: 4px;
+        border: none;
+    }
+
+    .nostalgic input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        outline: 0;
+        background-color: transparent;
+        width: 500px;
+    }
+
+    .nostalgic input[type="range"]::-webkit-slider-runnable-track {
+        height: 4px;
+        background: #eee;
+    }
+
+    .nostalgic input[type="range" i]::-webkit-slider-container {
+        height: 20px;
+        overflow: hidden;
+    }
+
+    .nostalgic input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #3643f4;
+        border: 1px solid transparent;
+        margin-top: -8px;
+        border-image: linear-gradient(#378bf8, #1166e6) 0 fill / 8 20 8 0 / 0px 0px 0 2000px;
+    }
+</style>
+
+<setting-section data-title="旧版外观" class="nostalgic">
+    <setting-panel>
+        <setting-list data-direction="column">
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>启用旧版主题模式</setting-text>
+                    <setting-text data-type="secondary">设置Header颜色</setting-text>
+                </div>
+                <setting-switch id="useOldTheme"></setting-switch>
+            </setting-item>
+            <setting-divider data-orientation="horizontal"></setting-divider>
+            <setting-item data-direction="row">
+                <setting-text>Header主题颜色</setting-text>
+                <input type="color" value="#ff0000" class="q-button q-button--small q-button--secondary pick-color" />
+            </setting-item>
+            <setting-divider data-orientation="horizontal"></setting-divider>
+            <setting-item data-direction="row" id="mst-settings-background-opacity">
+                <setting-text>Header颜色透明度</setting-text>
+                <input type="range" value="1" min="0" max="100" step="1"
+                    class="q-button q-button--small q-button--secondary pick-opacity" style="width: 61%;" />
+            </setting-item>
+        </setting-list>
+    </setting-panel>
+</setting-section>
+<setting-section data-title="备注" class="nostalgic">
+    <setting-panel>
+        <setting-list data-direction="column">
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>在新版本QQ中，默认小面板模式下是可以贴边自动吸附隐藏的。</setting-text>
+                    <setting-text >当前是初步版本，可能体验不够完美</setting-text>
+                </div>
+
+            </setting-item>
+            
+        </setting-list>
+    </setting-panel>
+</setting-section>
