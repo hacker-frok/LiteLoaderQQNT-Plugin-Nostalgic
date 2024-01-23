@@ -27,6 +27,7 @@
     margin: 10px 10px 12px 0px;
     width: 100%;
     overflow: hidden;
+    opacity: 1 !important;
 }
 .nostalgic-user-avatar-img{
     background-size: cover;
@@ -69,8 +70,20 @@
     align-content: center;
     justify-content: center;
     align-items: center;
+    justify-content: flex-start;
+    width: 100% ;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap;  
+    
 }
-
+#nostalgic-user-nickname{
+    max-width: calc(100% - 10px);
+    
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap;  
+}
 .nostalgic-user-vip {
     margin-left: 17px;
     font-size: 9px;
@@ -83,13 +96,11 @@
 
 #nostalgic-user-signature {
     font-size: 12px;
-    display: flex;
-    flex-direction: row;
-    height: 10px;
-    flex-wrap: nowrap;
-    align-items: center;
-    word-break: keep-all;
-    white-space: nowrap;
+    width: 100% ;
+    
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap;  
 }
 /*隐藏式侧栏*/
 .tab-container {

@@ -4,7 +4,7 @@ const path = require('path')
 function log(...args) {
     console.log(`[QQ怀旧模式]`, ...args);
 }
-// 更新样式
+
 function updateStyle(webContents, settingsPath) {
 
     try {
@@ -14,7 +14,6 @@ function updateStyle(webContents, settingsPath) {
         const useOldTheme = config.useOldTheme;
         const themeColor = config.themeColor;
         const backgroundOpacity = config.backgroundOpacity;
-        // 将backgroundOpacity(是个0-100的整数值)转为两位hex值作为RGBA的透明度（注意不要出现小数）
         const backgroundOpacityHex = Math.round(backgroundOpacity * 2.55).toString(16).padStart(2, "0");
 
         const csspath = path.join(__dirname, "/settings/style.css");
@@ -32,9 +31,8 @@ function updateStyle(webContents, settingsPath) {
                     --header-oldTheme-theme-tag-color: ${themeColor + "3f"};
                     --header-oldTheme-text-selected-color: ${themeColor + "7f"};
                 }`
-                //preloadString = ``
+               
             }
-            console.log(preloadString)
             webContents.send(
                 "LiteLoader.nostalgic.updateStyle",
                 preloadString + "\n\n" + data
@@ -56,7 +54,7 @@ if (!fs.existsSync(pluginDataPath)) {
 // 判断settings.json是否存在，如果不存在则创建
 if (!fs.existsSync(settingsPath)) {
     fs.writeFileSync(settingsPath, JSON.stringify({
-        "useOldTheme": false,
+        "useOldTheme": true,
         "themeColor": "#0a89eb",
         "backgroundOpacity": "85",
         "initShow":false
@@ -180,11 +178,10 @@ function watchSettingsChange(webContents, settingsPath) {
 // 创建窗口时触发
 module.exports.onBrowserWindowCreated = window => {
     const settingsPath = path.join(pluginDataPath, "settings.json");
-   
     window.on("ready-to-show", () => {
         const url = window.webContents.getURL();
         if (url.includes("app://./renderer/index.html")) {
-            //watchCSSChange(window.webContents, settingsPath);
+            watchCSSChange(window.webContents, settingsPath);
             watchSettingsChange(window.webContents, settingsPath);
         }
     });
