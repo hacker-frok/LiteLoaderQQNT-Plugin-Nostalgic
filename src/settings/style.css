@@ -16,7 +16,7 @@
     top: 9px;
     z-index: 2100;
     left: 1;
-    opacity: .6;
+    opacity: .25;
 }
 
 /* --------header----------- */
@@ -24,7 +24,7 @@
 .nostalgic-user-avatar {
     height: 52px;
     display: flex;
-    margin: 10px 10px 12px 0px;
+    margin: 8px 10px 8px 0px;
     width: 100%;
     overflow: hidden;
     opacity: 1 !important;
@@ -72,17 +72,17 @@
     align-items: center;
     justify-content: flex-start;
     width: 100% ;
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    white-space: nowrap;  
-    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
 }
 #nostalgic-user-nickname{
     max-width: calc(100% - 10px);
-    
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    white-space: nowrap;  
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .nostalgic-user-vip {
     margin-left: 17px;
@@ -97,11 +97,55 @@
 #nostalgic-user-signature {
     font-size: 12px;
     width: 100% ;
-    
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    white-space: nowrap;  
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
+/**********工具栏放底部***********/
+/**--
+.container .sidebar .sidebar__lower{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: stretch;
+    justify-content: flex-start;
+    background: var(--bg_nav);
+}
+
+.container .sidebar .func-menu{
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    width: 100%;
+    justify-content: space-evenly;
+    justify-content: space-around;
+    align-items: center;
+     opacity: 0.6;
+    .func-menu__item{
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    .func-menu__item_wrap{
+        padding: 10px;
+    }
+
+}
+.container .sidebar .func-menu>div[id='demoModeBtn']{
+        padding-top: 16px;
+        margin-right: 16px;
+        margin-left: 16px;
+}
+.list-toggler .viewport-list__inner{
+    padding-bottom: 45px;
+}
+--**/
+
 /*隐藏式侧栏*/
 .tab-container {
     transition: margin-left .3s;
@@ -129,32 +173,32 @@
         width: 85px;
     }
     .sidebar__avatar {
-        transform: scale(calc(36 / 36)) translateX(92px) translateY(10px);
+        transform: scale(calc(36 / 36)) translateX(86px) translateY(8px);
         transition: all .3s ease-in-out;
         opacity: 1;
         cursor: pointer;
         .user-avatar {
             width: 52px !important;
             height: 52px !important;
-            clip-path: inherit; 
+            clip-path: inherit;
         }
     }
-    
+
     &:hover {
         left: 0;
 
         .sidebar__avatar {
             transform: scale(calc(36 / 36));
-            /* .user-avatar {
-            width: 46px !important;
-            height: 46px !important;
-            } */
+
             opacity: 1;
-            
+
         }
     }
-   
+
+
 }
+
+
 
 
 @media (prefers-color-scheme: light) {
@@ -167,12 +211,15 @@
     }
     .window-control-area .q-icon{
         color: var(--header-oldTheme-background-color-light)!important;
-       
+
     }
      */
+     .nostalgic-qq-icon .q-icon {
+         color: var(--header-oldTheme-background-color-light)!important;
+     }
     .container .message-panel .contact-top-bar .search-input {
         .q-input__prefix .q-icon,
-        .q-input__inner::placeholder { 
+        .q-input__inner::placeholder {
             color: var(--header-oldTheme-background-color-light)!important;
         }
     }
@@ -189,15 +236,18 @@
     }
     /* .window-control-area{
         background-color: var( --header-oldTheme-color);
-    } 
+    }
     .window-control-area .q-icon{
         color: var(--header-oldTheme-background-color-dark)!important;
-       
+
     }
     */
+    .nostalgic-qq-icon .q-icon {
+         color: var(--header-oldTheme-background-color-dark)!important;
+     }
     .container .message-panel .contact-top-bar .search-input {
         .q-input__prefix .q-icon,
-        .q-input__inner::placeholder { 
+        .q-input__inner::placeholder {
             color: var(--header-oldTheme-background-color-dark)!important;
         }
     }
@@ -210,25 +260,26 @@
 
 
 .container .message-panel .contact-top-bar {
-    padding-left: 25px !important;
+    padding-left: 18px !important;
+    padding-bottom: 8px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-around;
 
-    
+
 }
 .message-panel .recent-contact .search-result{
-    top: 155px;
+    top: 140px;
 }
 .message-panel .recent-contact .contact-adder-btn{
     position: absolute;
-    top: 111px;
+    top: 104px;
     right: 7px;
 }
 .message-panel .recent-contact .main-search{
-    width: 97%!important;;
-    margin-left: -19px!important;
+    width: 95%!important;;
+    margin-left: -10px!important;
 }
 
 .contact-layout .contact-top-bar{

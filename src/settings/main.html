@@ -1,5 +1,4 @@
 <style>
-
     .pick-opacity {
         padding: 4px;
         border: none;
@@ -11,7 +10,7 @@
         margin: 0;
         outline: 0;
         background-color: transparent;
-        width: 500px;
+        width: 300px;
     }
 
     .nostalgic input[type="range"]::-webkit-slider-runnable-track {
@@ -35,6 +34,21 @@
         margin-top: -8px;
         border-image: linear-gradient(#378bf8, #1166e6) 0 fill / 8 20 8 0 / 0px 0px 0 2000px;
     }
+
+    .nostalgic-preview {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+        align-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .nostalgic-preview img {
+        border-radius: 6px;
+        width: 235px;
+    }
 </style>
 
 <setting-section data-title="旧版外观" class="nostalgic">
@@ -42,22 +56,66 @@
         <setting-list data-direction="column">
             <setting-item data-direction="row">
                 <div>
-                    <setting-text>启用旧版主题模式</setting-text>
-                    <setting-text data-type="secondary">设置Header颜色,部分样式需要重启QQ才正常显示</setting-text>
+                    <setting-text>启用Header面板染色</setting-text>
+                    <setting-text data-type="secondary">设置Header颜色,部分样式需要重启QQ才正常显示，或开启debug模式实时生效</setting-text>
                 </div>
                 <setting-switch id="useOldTheme"></setting-switch>
             </setting-item>
             <setting-divider data-orientation="horizontal"></setting-divider>
+
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>强制小面板窗口模式</setting-text>
+                    <setting-text data-type="secondary">每次启动时调整为小面板窗口</setting-text>
+                </div>
+                <setting-switch id="useOldThemeWin"></setting-switch>
+            </setting-item>
+            <setting-divider data-orientation="horizontal"></setting-divider>
+
+
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>隐藏折叠按钮(重启生效)</setting-text>
+                    <setting-text data-type="secondary">小面板窗口模式时隐藏折叠按钮</setting-text>
+                </div>
+                <setting-switch id="hideSwitchBtn"></setting-switch>
+            </setting-item>
+            <setting-divider data-orientation="horizontal"></setting-divider>
+
+
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>工具菜单放到底部</setting-text>
+                    <setting-text data-type="secondary">仿旧版本QQ将工具菜单放到底部</setting-text>
+                </div>
+                <setting-switch id="useOldThemeMenu"></setting-switch>
+            </setting-item>
+            <setting-divider data-orientation="horizontal"></setting-divider>
+
             <setting-item data-direction="row">
                 <setting-text>Header主题颜色</setting-text>
                 <input type="color" value="#ff0000" class="q-button q-button--small q-button--secondary pick-color" />
             </setting-item>
             <setting-divider data-orientation="horizontal"></setting-divider>
             <setting-item data-direction="row" id="mst-settings-background-opacity">
-                <setting-text>Header颜色透明度</setting-text>
+                <setting-text>Header文字颜色透明度</setting-text>
                 <input type="range" value="1" min="0" max="100" step="1"
-                    class="q-button q-button--small q-button--secondary pick-opacity"  />
+                    class="q-button q-button--small q-button--secondary pick-opacity" />
             </setting-item>
+        </setting-list>
+    </setting-panel>
+</setting-section>
+<setting-section data-title="其它" class="nostalgic">
+    <setting-panel>
+        <setting-list data-direction="column">
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>调试模式</setting-text>
+                    <setting-text data-type="secondary">开发时使用，实时生效</setting-text>
+                </div>
+                <setting-switch id="isDebug"></setting-switch>
+            </setting-item>
+
         </setting-list>
     </setting-panel>
 </setting-section>
@@ -67,11 +125,28 @@
             <setting-item data-direction="row">
                 <div>
                     <setting-text>在新版本QQ中，默认小面板模式下是可以贴边自动吸附隐藏的。</setting-text>
-                    <setting-text >当前是初步版本，可能体验不够完美，欢迎提issue</setting-text>
+                    <setting-text>当前是初步版本，可能体验不够完美，欢迎提issue</setting-text>
                 </div>
 
             </setting-item>
-            
+
+        </setting-list>
+    </setting-panel>
+</setting-section>
+
+<setting-section data-title="效果预览" class="nostalgic">
+    <setting-panel>
+        <setting-list data-direction="column">
+            <setting-item data-direction="row">
+                <div class="nostalgic-preview">
+                    <img
+                        src="https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/7dd127bf-b56b-4e0e-b404-10cc6e4583cb">
+                    <img
+                        src="https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/9174d205-abc4-4db5-aa1e-de2f49118abd">
+                </div>
+
+            </setting-item>
+
         </setting-list>
     </setting-panel>
 </setting-section>

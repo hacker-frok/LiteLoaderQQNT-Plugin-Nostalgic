@@ -44,10 +44,14 @@ const onload = async () => {
           element.id = "nostalgic-style"
           document.head.appendChild(element);
           nostalgic.updateStyle((event, message) => {
-            element.textContent = message;
+            //console.log('updateStyle---event-----')
+            nostalgic.getSettings().then((config)=>{
+              element.textContent = config.useOldThemeMenu? message.replace("/**--",'').replace('--**/',''):message;
+            });
+
           });
           topbar.insertAdjacentHTML('afterbegin', headerHTML)
-          document.querySelector('#app').insertAdjacentHTML('afterbegin', `<div class="nostalgic-qq-icon"><i class="q-icon icon"  style="--b4589f60: inherit;--6ef2e80d: 15px;"><svg t="1705867520276" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3650" width="14" height="14"><path d="M931.507451 840.8889c-23.05197 2.785996-89.719883-105.481862-89.719883-105.481862 0 62.689918-32.271958 144.493811-102.101866 203.571733 33.683956 10.383986 109.685856 38.33395 91.60588 68.84191-14.631981 24.685968-251.019672 15.761979-319.263582 8.07399-68.243911 7.68799-304.631601 16.611978-319.263582-8.07399-18.089976-30.49996 57.835924-58.427924 91.56588-68.82991-69.839909-59.077923-102.117866-140.889816-102.117866-203.583733 0 0-66.667913 108.267858-89.717883 105.481862-10.739986-1.299998-24.847967-59.287922 18.693975-199.407739 20.521973-66.047914 43.989942-120.955842 80.287895-211.557724C185.366427 196.125743 281.964301 0.012 512 0c227.473702 0.012 326.311573 192.265748 320.527581 429.925437 36.235953 90.445882 59.823922 145.699809 80.287894 211.555724 43.535943 140.119817 29.431961 198.105741 18.691976 199.407739z" p-id="3651" fill="#e6e6e6"></path></svg></i></div>`)
+          document.querySelector('#app').insertAdjacentHTML('afterbegin', `<div class="nostalgic-qq-icon"><i class="q-icon icon"  ><svg t="1705867520276" class="icon" fill="currentColor" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3650" width="14" height="14"><path d="M931.507451 840.8889c-23.05197 2.785996-89.719883-105.481862-89.719883-105.481862 0 62.689918-32.271958 144.493811-102.101866 203.571733 33.683956 10.383986 109.685856 38.33395 91.60588 68.84191-14.631981 24.685968-251.019672 15.761979-319.263582 8.07399-68.243911 7.68799-304.631601 16.611978-319.263582-8.07399-18.089976-30.49996 57.835924-58.427924 91.56588-68.82991-69.839909-59.077923-102.117866-140.889816-102.117866-203.583733 0 0-66.667913 108.267858-89.717883 105.481862-10.739986-1.299998-24.847967-59.287922 18.693975-199.407739 20.521973-66.047914 43.989942-120.955842 80.287895-211.557724C185.366427 196.125743 281.964301 0.012 512 0c227.473702 0.012 326.311573 192.265748 320.527581 429.925437 36.235953 90.445882 59.823922 145.699809 80.287894 211.555724 43.535943 140.119817 29.431961 198.105741 18.691976 199.407739z" p-id="3651" ></path></svg></i></div>`)
           const getHeadImgInterval = setInterval(() => {
             const headimgurl = document.querySelector('.avatar')?.style.backgroundImage
             if (!headimgurl.includes("renderer/img/default_avatar")) {
@@ -61,7 +65,7 @@ const onload = async () => {
 
           nostalgic.rendererReady();
           //nostalgic.reSize()
-          window.resizeTo(310, window.outerHeight < 650 ? 825 : window.outerHeight)
+          settings.useOldThemeWin &&( window.resizeTo(310, window.outerHeight < 650 ? 825 : window.outerHeight))
 
           if (!settings.initShow) {
             settings.initShow = true
@@ -97,7 +101,7 @@ const refreshDataT = setInterval(() => {
       const areaBtn = document.querySelector('.window-control-area')
       const areaBtns = document.querySelectorAll('.window-control-area i')
       if (!styleWin?.includes("--max-width-aside: 320px")) {
-        switchBtn?.style && (switchBtn.style.display = 'none')
+        switchBtn?.style && (settings.hideSwitchBtn && (switchBtn.style.display = 'none'))
         if (settings.useOldTheme) {
           areaBtn?.style && (areaBtn.style.backgroundColor = "none!important")
           for (let i = 0; i < areaBtns.length; i++) {
@@ -132,6 +136,29 @@ const refreshDataT = setInterval(() => {
 
 }, 1500)
 
+const switchChage=(view,id)=>{
+    const domSwitch = view.querySelector(`#${id}`);
+    if (settings[id]) {
+      domSwitch.setAttribute("is-active", "");
+    }
+    //添加点击监听
+    domSwitch.addEventListener("click", (event) => {
+      const isActive = event.currentTarget.hasAttribute("is-active");
+      if (isActive) {
+        event.currentTarget.removeAttribute("is-active")
+        settings[id] = false;
+      } else {
+        event.currentTarget.setAttribute("is-active", "");
+        settings[id] = true;
+      }
+      // 将修改后的settings保存到settings.json
+      nostalgic.setSettings(settings);
+      if(id=="isDebug"){
+        nostalgic.setDebug(settings[id])
+      }
+
+    });
+}
 // 打开设置界面时触发
 export const onSettingWindowCreated = async view => {
   log('打开设置界面')
@@ -183,36 +210,20 @@ export const onSettingWindowCreated = async view => {
     // 给pick-opacity(input)设置默认值
     const pickOpacity = view.querySelector(".pick-opacity");
     pickOpacity.value = backgroundOpacity;
-    // 给pick-opacity(input)添加事件监听 
+    // 给pick-opacity(input)添加事件监听
     pickOpacity.addEventListener("change", (event) => {
-      // 修改settings的backgroundOpacity值 
+      // 修改settings的backgroundOpacity值
       settings.backgroundOpacity = event.target.value;
-      // 将修改后的settings保存到settings.json 
-      nostalgic.setSettings(settings);
-    });
-
-    // 选择id为heti的q-switch
-    const useOldThemeSwitch = view.querySelector("#useOldTheme");
-    if (settings.useOldTheme) {
-      useOldThemeSwitch.setAttribute("is-active", "");
-    }
-    // 给hetiSwitch添加点击监听
-    useOldThemeSwitch.addEventListener("click", (event) => {
-      const isActive = event.currentTarget.hasAttribute("is-active");
-
-      if (isActive) {
-        event.currentTarget.removeAttribute("is-active")
-
-        settings.useOldTheme = false;
-      } else {
-        event.currentTarget.setAttribute("is-active", "");
-
-        settings.useOldTheme = true;
-      }
-
       // 将修改后的settings保存到settings.json
       nostalgic.setSettings(settings);
     });
+    switchChage(view,'useOldTheme')
+    switchChage(view,'useOldThemeWin')
+    switchChage(view,'isDebug')
+    switchChage(view,'useOldThemeMenu')
+     switchChage(view,'hideSwitchBtn')
+
+
   } catch (error) {
     log("[设置页面错误]", error);
   }

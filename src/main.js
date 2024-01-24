@@ -1,4 +1,4 @@
-const { BrowserWindow, ipcMain } = require('electron')
+const { BrowserWindow, ipcMain ,webContents} = require('electron')
 const fs = require('fs')
 const path = require('path')
 
@@ -7,8 +7,8 @@ let userInfo=undefined
 function log(...args) {
     console.log(`\x1b[35m[QQ怀旧模式]\x1b[0m`, ...args);
 }
-
-function updateStyle(webContents, settingsPath) {
+let mainWindow
+function updateStyle(webContent, settingsPath) {
 
     try {
         // 读取settings.json
@@ -34,13 +34,27 @@ function updateStyle(webContents, settingsPath) {
                     --header-oldTheme-theme-tag-color: ${themeColor + "3f"};
                     --header-oldTheme-text-selected-color: ${themeColor + "7f"};
                 }`
-               
+
             }
-            webContents.send(
-                "LiteLoader.nostalgic.updateStyle",
-                preloadString + "\n\n" + data
-            );
-        });
+            if(mainWindow){
+                mainWindow.webContents.send(
+                    "LiteLoader.nostalgic.updateStyle",
+                    preloadString + "\n\n" + data
+                );
+            }else{
+             webContents.getAllWebContents().forEach((webContent) => {
+                    webContent.send(
+                        "LiteLoader.nostalgic.updateStyle",
+                        preloadString + "\n\n" + data
+                    );
+                });
+            }
+
+        //     webContent.send(
+        //         "LiteLoader.nostalgic.updateStyle",
+        //         preloadString + "\n\n" + data
+        //     );
+         });
     } catch (error) {
         log(error.message)
     }
@@ -60,10 +74,14 @@ if (!fs.existsSync(settingsPath)) {
         "useOldTheme": true,
         "themeColor": "#0a89eb",
         "backgroundOpacity": "85",
-        "initShow":false
+        "initShow":false,
+        "isDebug":false,
+        "useOldThemeWin":true,
+        "useOldThemeMenu":false,
+        "hideSwitchBtn":true
     }));
 } else {
-    
+
     const data = fs.readFileSync(settingsPath, "utf-8");
     const config = JSON.parse(data);
     if (!config.useOldTheme) {
@@ -71,11 +89,27 @@ if (!fs.existsSync(settingsPath)) {
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
     if (!config.backgroundOpacity) {
-        config.backgroundOpacity = "70";
+        config.backgroundOpacity = "85";
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
     if (!config.initShow) {
         config.initShow = false;
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
+     if (config.useOldThemeWin==undefined||config.useOldThemeWin==null) {
+        config.useOldThemeWin = true;
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
+    if (!config.useOldThemeMenu) {
+        config.useOldThemeMenu = false;
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
+    if (config.hideSwitchBtn==undefined||config.hideSwitchBtn==null) {
+        config.hideSwitchBtn = true;
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
+     if (!config.isDebug) {
+        config.isDebug = false;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
 }
@@ -94,7 +128,7 @@ ipcMain.on(
     "LiteLoader.nostalgic.updateStyle",
     (event, settingsPath) => {
         const window = BrowserWindow.fromWebContents(event.sender);
-       
+
         updateStyle(window.webContents, settingsPath);
     });
 
@@ -168,10 +202,18 @@ function debounce(fn, time) {
 //监听文件修改（开发时使用）
 function watchCSSChange(webContents, settingsPath) {
     const filepath = path.join(__dirname, "/settings/style.css");
-    fs.watch(filepath, "utf-8", debounce(() => {
+    watcherStyleFile= fs.watchFile(filepath,{interval: 20}, debounce(() => {
         updateStyle(webContents, settingsPath);
     }, 100));
 }
+
+ipcMain.handle(
+    "LiteLoader.nostalgic.setDebug",
+    (event, open) => {
+        const window = BrowserWindow.fromWebContents(event.sender);
+        filepath = path.join(__dirname, "/settings/style.css");
+        open?watchCSSChange(window.webContents, settingsPath):(fs.unwatchFile(filepath),null);
+});
 
 // 监听配置文件修改
 function watchSettingsChange(webContents, settingsPath) {
@@ -182,7 +224,7 @@ function watchSettingsChange(webContents, settingsPath) {
 
 // 创建窗口时触发
 module.exports.onBrowserWindowCreated = window => {
-   
+
     const original_send = window.webContents.send;
     const patched_send = (channel, ...args) => {
         if(JSON.stringify(args).includes('nodeIKernelProfileListener/onProfileDetailInfoChanged')){
@@ -193,12 +235,19 @@ module.exports.onBrowserWindowCreated = window => {
         return original_send.call(window.webContents, channel, ...args);
     };
     window.webContents.send = patched_send;
-    
+    window.webContents.on("did-stop-loading", () => {
+        if (window.webContents.getURL().indexOf("#/main/message") !== -1) {
+            mainWindow = window;
+        }
+    });
     const settingsPath = path.join(pluginDataPath, "settings.json");
     window.on("ready-to-show", () => {
         const url = window.webContents.getURL();
         if (url.includes("app://./renderer/index.html")) {
-            //watchCSSChange(window.webContents, settingsPath);
+            const data = fs.readFileSync(settingsPath, "utf-8");
+            const config = JSON.parse(data);
+
+            config.isDebug && watchCSSChange(window.webContents, settingsPath);
             watchSettingsChange(window.webContents, settingsPath);
         }
     });
