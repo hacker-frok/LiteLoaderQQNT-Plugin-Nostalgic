@@ -198,7 +198,7 @@ module.exports.onBrowserWindowCreated = window => {
     window.on("ready-to-show", () => {
         const url = window.webContents.getURL();
         if (url.includes("app://./renderer/index.html")) {
-            watchCSSChange(window.webContents, settingsPath);
+            //watchCSSChange(window.webContents, settingsPath);
             watchSettingsChange(window.webContents, settingsPath);
         }
     });
