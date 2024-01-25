@@ -1,16 +1,12 @@
 <style>
-    .pick-opacity {
-        padding: 4px;
-        border: none;
-    }
-
-    .nostalgic input[type="range"] {
+    .nostalgic input[type="range"],.nostalgic input[type="range"]:focus {
         -webkit-appearance: none;
         appearance: none;
         margin: 0;
         outline: 0;
         background-color: transparent;
         width: 300px;
+        border: none!important;
     }
 
     .nostalgic input[type="range"]::-webkit-slider-runnable-track {
@@ -45,6 +41,11 @@
         width: 100%;
     }
 
+    .nostalgic-color {
+        display: flex;
+    align-items: center;
+    }
+
     .nostalgic-preview img {
         border-radius: 6px;
         width: 235px;
@@ -60,6 +61,24 @@
                     <setting-text data-type="secondary">设置Header颜色,部分样式需要重启QQ才正常显示，或开启debug模式实时生效</setting-text>
                 </div>
                 <setting-switch id="useOldTheme"></setting-switch>
+            </setting-item>
+             <setting-divider data-orientation="horizontal"></setting-divider>
+
+            <setting-item data-direction="row">
+                <setting-text>Header面板背景颜色</setting-text>
+                <div class="nostalgic-color">
+                    左：<input type="color" value="#ff0000"
+                        class="q-button q-button--small q-button--secondary  pick-color" />
+                    右：<input type="color" value="#ff0000"
+                        class="q-button q-button--small q-button--secondary  pick-color2" />
+                </div>
+
+            </setting-item>
+            <setting-divider data-orientation="horizontal"></setting-divider>
+            <setting-item data-direction="row" id="mst-settings-background-opacity">
+                <setting-text>Header面板文字颜色透明度</setting-text>
+                <input type="range" value="1" min="0" max="100" step="1"
+                    class="q-button q-button--small q-button--secondary pick-opacity" />
             </setting-item>
             <setting-divider data-orientation="horizontal"></setting-divider>
 
@@ -90,18 +109,15 @@
                 </div>
                 <setting-switch id="useOldThemeMenu"></setting-switch>
             </setting-item>
-            <setting-divider data-orientation="horizontal"></setting-divider>
 
-            <setting-item data-direction="row">
-                <setting-text>Header主题颜色</setting-text>
-                <input type="color" value="#ff0000" class="q-button q-button--small q-button--secondary pick-color" />
+             <setting-item data-direction="row">
+                <div>
+                    <setting-text>旧版列表样式</setting-text>
+                    <setting-text data-type="secondary">仿旧版本QQ列表样式、置顶样式</setting-text>
+                </div>
+                <setting-switch id="useOldThemeMegList"></setting-switch>
             </setting-item>
-            <setting-divider data-orientation="horizontal"></setting-divider>
-            <setting-item data-direction="row" id="mst-settings-background-opacity">
-                <setting-text>Header文字颜色透明度</setting-text>
-                <input type="range" value="1" min="0" max="100" step="1"
-                    class="q-button q-button--small q-button--secondary pick-opacity" />
-            </setting-item>
+
         </setting-list>
     </setting-panel>
 </setting-section>

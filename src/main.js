@@ -16,6 +16,7 @@ function updateStyle(webContent, settingsPath) {
         const config = JSON.parse(data);
         const useOldTheme = config.useOldTheme;
         const themeColor = config.themeColor;
+        const themeColor2 = config.themeColor2;
         const backgroundOpacity = config.backgroundOpacity;
         const backgroundOpacityHex = Math.round(backgroundOpacity * 2.55).toString(16).padStart(2, "0");
 
@@ -29,6 +30,8 @@ function updateStyle(webContent, settingsPath) {
             if (useOldTheme) {
                 preloadString = `:root {
                     --header-oldTheme-color: ${themeColor};
+                    --header-oldTheme-color2: ${themeColor2};
+                    --header-oldTheme-color-linear:linear-gradient(-20deg,${themeColor} 0%, ${themeColor2} 100%);
                     --header-oldTheme-background-color-light: #FFFFFF${backgroundOpacityHex};
                     --header-oldTheme-background-color-dark: #171717${backgroundOpacityHex};
                     --header-oldTheme-theme-tag-color: ${themeColor + "3f"};
@@ -72,13 +75,15 @@ if (!fs.existsSync(pluginDataPath)) {
 if (!fs.existsSync(settingsPath)) {
     fs.writeFileSync(settingsPath, JSON.stringify({
         "useOldTheme": true,
-        "themeColor": "#0a89eb",
+        "themeColor": "#21d4fd",
+        "themeColor2":"#b721ff",
         "backgroundOpacity": "85",
         "initShow":false,
         "isDebug":false,
         "useOldThemeWin":true,
         "useOldThemeMenu":false,
-        "hideSwitchBtn":true
+        "hideSwitchBtn":true,
+        "useOldThemeMegList":false
     }));
 } else {
 
@@ -86,6 +91,14 @@ if (!fs.existsSync(settingsPath)) {
     const config = JSON.parse(data);
     if (!config.useOldTheme) {
         config.useOldTheme = false;
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
+    if (!config.themeColor) {
+        config.themeColor =  "#21d4fd";
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
+    if (!config.themeColor2) {
+        config.themeColor2 = "#b721ff";
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
     if (!config.backgroundOpacity) {
@@ -96,8 +109,12 @@ if (!fs.existsSync(settingsPath)) {
         config.initShow = false;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
-     if (config.useOldThemeWin==undefined||config.useOldThemeWin==null) {
+    if (config.useOldThemeWin==undefined||config.useOldThemeWin==null) {
         config.useOldThemeWin = true;
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
+    if (config.useOldThemeMegList==undefined||config.useOldThemeMegList==null) {
+        config.useOldThemeMegList = true;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
     if (!config.useOldThemeMenu) {

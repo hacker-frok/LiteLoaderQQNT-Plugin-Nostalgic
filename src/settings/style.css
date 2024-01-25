@@ -29,14 +29,16 @@
     overflow: hidden;
     opacity: 1 !important;
 }
-.nostalgic-user-avatar-img{
+
+.nostalgic-user-avatar-img {
     background-size: cover;
     clip-path: inherit;
     border-radius: 50%;
     width: 52px;
     height: 52px;
 }
-.nostalgic-user-avatar__status{
+
+.nostalgic-user-avatar__status {
     bottom: -1px;
     box-sizing: content-box;
     position: absolute;
@@ -44,6 +46,7 @@
     vertical-align: middle;
     background-size: cover;
 }
+
 .nostalgic-user-container {
     width: 52px;
     height: 52px;
@@ -60,7 +63,7 @@
     align-items: flex-start;
     width: calc(100% - 55px);
     overflow: hidden;
-   /* width: 164px;*/
+    /* width: 164px;*/
 }
 
 #nostalgic-user-desc {
@@ -71,19 +74,21 @@
     justify-content: center;
     align-items: center;
     justify-content: flex-start;
-    width: 100% ;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 
 }
-#nostalgic-user-nickname{
+
+#nostalgic-user-nickname {
     max-width: calc(100% - 10px);
 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 .nostalgic-user-vip {
     margin-left: 17px;
     font-size: 9px;
@@ -96,7 +101,7 @@
 
 #nostalgic-user-signature {
     font-size: 12px;
-    width: 100% ;
+    width: 100%;
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -106,20 +111,25 @@
 /**********工具栏放底部***********/
 /**--
 .container .sidebar .sidebar__lower{
-    position: fixed;
+    position: fixed!important;
     bottom: 0;
-    width: 100%;
-    left: 0;
+    width: 100%!important;
+    left: 0!important;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-content: stretch;
     justify-content: flex-start;
-    background: var(--bg_nav);
+    background: var(--bg_nav)!important;
+    backdrop-filter: blur(20px);
+
+}
+body .container .draggable-view__container.sidebar {
+    backdrop-filter: none!important;;
 }
 
 .container .sidebar .func-menu{
-    display: flex;
+    display: flex!important;
     flex-direction: row-reverse;
     flex-wrap: nowrap;
     width: 100%;
@@ -172,11 +182,13 @@
     .sidebar-nav {
         width: 85px;
     }
+
     .sidebar__avatar {
         transform: scale(calc(36 / 36)) translateX(86px) translateY(8px);
         transition: all .3s ease-in-out;
         opacity: 1;
         cursor: pointer;
+
         .user-avatar {
             width: 52px !important;
             height: 52px !important;
@@ -202,63 +214,89 @@
 
 
 @media (prefers-color-scheme: light) {
-    .message-panel .contact-top-bar{
-        background-color: var( --header-oldTheme-color);
+    .message-panel .contact-top-bar {
+        background-image: var(--header-oldTheme-color-linear);
         color: var(--header-oldTheme-background-color-light);
-    }
-    /* .window-control-area{
-        background-color: var( --header-oldTheme-color);
-    }
-    .window-control-area .q-icon{
-        color: var(--header-oldTheme-background-color-light)!important;
+        /*
+		background-size: 500%;
 
+		animation: bgAnimation 1s linear infinite;*/
     }
-     */
-     .nostalgic-qq-icon .q-icon {
-         color: var(--header-oldTheme-background-color-light)!important;
-     }
+
+    .nostalgic-qq-icon .q-icon {
+        color: var(--header-oldTheme-background-color-light) !important;
+    }
+
     .container .message-panel .contact-top-bar .search-input {
+
         .q-input__prefix .q-icon,
         .q-input__inner::placeholder {
-            color: var(--header-oldTheme-background-color-light)!important;
+            color: var(--header-oldTheme-background-color-light) !important;
         }
     }
-    .message-panel .recent-contact .contact-adder-btn{
-        .q-icon{
-            color: var(--header-oldTheme-background-color-light)!important;
+
+    .message-panel .recent-contact .contact-adder-btn {
+        .q-icon {
+            color: var(--header-oldTheme-background-color-light) !important;
         }
     }
 }
+
 @media (prefers-color-scheme: dark) {
-    .message-panel .contact-top-bar{
-        background-color: var( --header-oldTheme-color);
+    .message-panel .contact-top-bar {
+
+        background-image: var(--header-oldTheme-color-linear);
         color: var(--header-oldTheme-background-color-dark);
     }
-    /* .window-control-area{
-        background-color: var( --header-oldTheme-color);
-    }
-    .window-control-area .q-icon{
-        color: var(--header-oldTheme-background-color-dark)!important;
 
-    }
-    */
     .nostalgic-qq-icon .q-icon {
-         color: var(--header-oldTheme-background-color-dark)!important;
-     }
+        color: var(--header-oldTheme-background-color-dark) !important;
+    }
+
     .container .message-panel .contact-top-bar .search-input {
+
         .q-input__prefix .q-icon,
         .q-input__inner::placeholder {
-            color: var(--header-oldTheme-background-color-dark)!important;
+            color: var(--header-oldTheme-background-color-dark) !important;
         }
     }
-    .message-panel .recent-contact .contact-adder-btn{
-        .q-icon{
-            color: var(--header-oldTheme-background-color-dark)!important;
+
+    .message-panel .recent-contact .contact-adder-btn {
+        .q-icon {
+            color: var(--header-oldTheme-background-color-dark) !important;
         }
     }
 }
 
+/*旧版消息列表**/
 
+/*++
+.message-panel .list-item{
+    height: 64px;
+}
+.message-panel .recent-contact-item--top .list-item__container {
+    background: none !important;
+}
+
+.message-panel .list-item.recent-contact-item--top::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--on_bg_text) transparent transparent transparent;
+    transform: rotate(135deg);
+    position: absolute;
+    top: -5px;
+    left: -5px;
+
+}
+++*/
+
+
+
+/****其它调整***/
 .container .message-panel .contact-top-bar {
     padding-left: 18px !important;
     padding-bottom: 8px;
@@ -269,26 +307,32 @@
 
 
 }
-.message-panel .recent-contact .search-result{
+
+.message-panel .recent-contact .search-result {
     top: 140px;
 }
-.message-panel .recent-contact .contact-adder-btn{
+
+.message-panel .recent-contact .contact-adder-btn {
     position: absolute;
     top: 104px;
     right: 7px;
 }
-.message-panel .recent-contact .main-search{
-    width: 95%!important;;
-    margin-left: -10px!important;
+
+.message-panel .recent-contact .main-search {
+    width: 95% !important;
+    ;
+    margin-left: -10px !important;
 }
 
-.contact-layout .contact-top-bar{
+.contact-layout .contact-top-bar {
     padding-top: 50px !important;
     padding-bottom: 16px !important;
 }
-.contact-layout .contact-top-bar .main-search{
+
+.contact-layout .contact-top-bar .main-search {
     margin-left: 66px !important;
 }
-.contact-layout .contact-top-bar .search-result{
-    top: 100px!important;
+
+.contact-layout .contact-top-bar .search-result {
+    top: 100px !important;
 }

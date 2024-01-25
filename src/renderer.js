@@ -46,7 +46,13 @@ const onload = async () => {
           nostalgic.updateStyle((event, message) => {
             //console.log('updateStyle---event-----')
             nostalgic.getSettings().then((config)=>{
-              element.textContent = config.useOldThemeMenu? message.replace("/**--",'').replace('--**/',''):message;
+              if(config.useOldThemeMegList){
+                message=message.replace("/*++",'').replace('++*/','')
+              }
+              if(config.useOldThemeMenu){
+                message=message.replace("/**--",'').replace('--**/','')
+              }
+              element.textContent = message;
             });
 
           });
@@ -192,7 +198,7 @@ export const onSettingWindowCreated = async view => {
     // 获取设置
     const settings = await nostalgic.getSettings();
     const themeColor = settings.themeColor;
-
+    const themeColor2 = settings.themeColor2;
     // 给pick-color(input)设置默认颜色
     const pickColor = view.querySelector(".pick-color");
     pickColor.value = themeColor;
@@ -205,6 +211,12 @@ export const onSettingWindowCreated = async view => {
       nostalgic.setSettings(settings);
     });
 
+    const pickColor2 = view.querySelector(".pick-color2");
+    pickColor2.value = themeColor2;
+    pickColor2.addEventListener("change", (event) => {
+      settings.themeColor2 = event.target.value;
+      nostalgic.setSettings(settings);
+    });
     // 背景颜色透明
     const backgroundOpacity = settings.backgroundOpacity;
     // 给pick-opacity(input)设置默认值
@@ -217,12 +229,10 @@ export const onSettingWindowCreated = async view => {
       // 将修改后的settings保存到settings.json
       nostalgic.setSettings(settings);
     });
-    switchChage(view,'useOldTheme')
-    switchChage(view,'useOldThemeWin')
-    switchChage(view,'isDebug')
-    switchChage(view,'useOldThemeMenu')
-     switchChage(view,'hideSwitchBtn')
-
+    const switchSettingList=['useOldTheme','useOldThemeWin','isDebug','useOldThemeMenu','hideSwitchBtn','useOldThemeMegList']
+    switchSettingList.forEach((id)=>{
+      switchChage(view,id)
+    })
 
   } catch (error) {
     log("[设置页面错误]", error);
