@@ -4,9 +4,58 @@ function log(...args) {
   console.log(`\x1b[35m[QQ怀旧模式]\x1b[0m`, ...args);
   nostalgic.logToMain(...args);
 }
+let windowStyleMini=false
+//菜单按钮
+const BTN_MENU_HTML = `
+    <div id="nostalgic-leftTools" style="transform:rotate(268deg)" class="func-menu__item_wrap" >
+      <div class="sidebar-tooltips vue-component">
+        <div class="func-menu-more-component func-menu__item vue-component" >
+          <span class="q-badge q-badge__red update-badge vue-component" style="vertical-align: middle;">
+            <div class="icon-item sidebar-icon vue-component" role="button" tabindex="-1" aria-label="菜单" style="--hover-color: var(--brand_standard);">
+              <i class="q-icon vue-component" style="--b4589f60: var(--icon_primary); --6ef2e80d: 24px;"><svg fill="currentColor" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M208.83158 483.043016h184.940735a72.952401 72.952401 0 0 0 72.845746-72.845745V225.363191a73.059056 73.059056 0 0 0-72.845746-72.9524H208.83158a72.952401 72.952401 0 0 0-72.845745 72.9524v184.83408a72.845745 72.845745 0 0 0 72.845745 72.845745z m204.458702-72.845745a19.517967 19.517967 0 0 1-19.517967 19.517967H208.83158a19.517967 19.517967 0 0 1-19.517967-19.517967V225.363191a19.624622 19.624622 0 0 1 19.517967-19.624622h184.940735a19.624622 19.624622 0 0 1 19.517967 19.624622zM402.624727 547.03635h-191.980002a74.65889 74.65889 0 0 0-74.65889 74.65889v191.980002a74.65889 74.65889 0 0 0 74.65889 74.65889h191.980002a74.65889 74.65889 0 0 0 74.658889-74.65889v-191.980002a74.65889 74.65889 0 0 0-74.658889-74.65889z m-213.311114 74.65889a21.331111 21.331111 0 0 1 21.331112-21.331111h191.980002a21.331111 21.331111 0 0 1 21.331111 21.331111v191.980002a21.331111 21.331111 0 0 1-21.331111 21.331112h-191.980002a21.331111 21.331111 0 0 1-21.331112-21.331112zM799.063431 552.369128H614.122696a72.952401 72.952401 0 0 0-72.845746 72.952401V810.688887a72.845745 72.845745 0 0 0 72.845746 72.845745h184.940735A72.952401 72.952401 0 0 0 871.909176 810.688887V625.321529a73.059056 73.059056 0 0 0-72.845745-72.952401z m-204.458702 72.952401a19.624622 19.624622 0 0 1 19.517967-19.624622h184.940735a19.624622 19.624622 0 0 1 19.517967 19.624622V810.688887a19.517967 19.517967 0 0 1-19.517967 19.517966H614.122696A19.517967 19.517967 0 0 1 594.604729 810.688887zM701.260285 508.853661a68.152901 68.152901 0 0 0 48.421623-20.051245l118.174357-118.174356a68.472867 68.472867 0 0 0 0-96.843246L749.681908 155.503802a68.579523 68.579523 0 0 0-96.843245 0L534.55765 273.784814a68.792834 68.792834 0 0 0 0 96.843246l118.281013 118.174356a68.046245 68.046245 0 0 0 48.421622 20.051245z m10.665556-315.593792L830.206853 311.540881a15.145089 15.145089 0 0 1 0 21.331112L711.925841 451.153005a15.145089 15.145089 0 0 1-21.331111 0L572.313717 332.871993a15.145089 15.145089 0 0 1 0-21.331112l118.281013-118.281012a15.3584 15.3584 0 0 1 21.331111 0z"></path></svg>
+              </i>
+            </div>
+          </span>
+        </div>
+      </div>
+    </div>
+`
+
+const setExtBtn = () => {
+  try {
+    // 插入菜单按钮
+    const funcMenu = document.querySelector('.func-menu')
+    !document.querySelector('#nostalgic-leftTools') && funcMenu.insertAdjacentHTML('beforeend', BTN_MENU_HTML)
+    const leftToolsBtn = document.querySelector('#nostalgic-leftTools')
+    const sidebarNav = document.querySelector('.sidebar__nav')
+    //菜单按钮点击事件处理
+    leftToolsBtn.addEventListener('click', (e) => {
+      if (sidebarNav.classList.contains("sidebar__nav_show")) {
+        sidebarNav.classList.remove('sidebar__nav_show')
+        document.querySelector('#nostalgic-leftTools').style.transform = 'rotate(270deg)'
+      } else {
+        sidebarNav.classList.add('sidebar__nav_show')
+        document.querySelector('#nostalgic-leftTools').style.transform = 'rotate(180deg)'
+      }
+
+    })
+    //菜单面板点击后关闭
+    document.querySelector('.sidebar__nav').addEventListener("click", (event) => {
+      if (sidebarNav.classList.contains("sidebar__nav_show")) {
+        sidebarNav.classList.remove('sidebar__nav_show')
+        document.querySelector('#nostalgic-leftTools').style.transform = 'rotate(270deg)'
+      }
+
+    });
 
 
+  } catch (error) {
+    log('处理菜单按钮异常：', error)
+  }
+
+}
 const settings = await nostalgic.getSettings();
+
 const onload = async () => {
 
   const html_header_file_path = `local:///${plugin_path}/src/settings/header.html`;
@@ -26,62 +75,86 @@ const onload = async () => {
       log('不支持macOS')
       return
     }
-    const findFuncMenuInterval = setInterval(async() => {
 
-      if (location.hash.includes("#/main/message")&&nostalgic.getProfileDetailInfo) {
-        const userinfo =await nostalgic.getProfileDetailInfo()
-        if(!userinfo)return
+    const findFuncMenuInterval = setInterval(async () => {
+
+      if (location.hash.includes("#/main/message") && nostalgic.getProfileDetailInfo) {
+        const userinfo = await nostalgic.getProfileDetailInfo()
+        //还没获取到用户信息，跳出并继续
+        if (!userinfo) return
         clearInterval(findFuncMenuInterval)
-        // 插入
+
         const topbar = document.querySelector('.contact-top-bar')
         try {
+
+          setExtBtn()
+
           //log(JSON.stringify(userinfo))
+          //替换用户信息
           headerHTML = headerHTML.replace("{nickName}", userinfo?.nick)
           headerHTML = headerHTML.replace("{bio}", userinfo?.longNick || '这家伙很懒,什么也没留下')
           headerHTML = headerHTML.replace("{vip}", userinfo?.svipFlag ? 'svip' : (userinfo.vipFlag ? 'vip' : ''))
-          // 页面加载完成时触发
+
+          //插入js文件并写入css
           const element = document.createElement("style");
           element.id = "nostalgic-style"
           document.head.appendChild(element);
+
+          //监听主进程发来的消息
           nostalgic.updateStyle((event, message) => {
-            //console.log('updateStyle---event-----')
-            nostalgic.getSettings().then((config)=>{
-              if(config.useOldThemeMegList){
-                message=message.replace("/*++",'').replace('++*/','')
+            // console.log('updateStyle---event-----')
+            nostalgic.getSettings().then((config) => {
+              if (config.useOldThemeMegList) {
+                message = message.replace("/*++", '').replace('++*/', '')
               }
-              if(config.useOldThemeMenu){
-                message=message.replace("/**--",'').replace('--**/','')
-              }
-              element.textContent = message;
-            });
+                element.textContent = message;
+                //在配置界面调整，强小面板模式
+                if (document.querySelector('.nostalgic-user-avatar')&&window.outerWidth >= 400&&!message.includes('大面板')) {
+                 
+                    window.resizeTo(295, window.outerHeight < 650 ? 825 : window.outerHeight)
+                    windowStyleMini=true
+                
+                }
+               
+              
+              });
 
           });
-          topbar.insertAdjacentHTML('afterbegin', headerHTML)
-          document.querySelector('#app').insertAdjacentHTML('afterbegin', `<div class="nostalgic-qq-icon"><i class="q-icon icon"  ><svg t="1705867520276" class="icon" fill="currentColor" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3650" width="14" height="14"><path d="M931.507451 840.8889c-23.05197 2.785996-89.719883-105.481862-89.719883-105.481862 0 62.689918-32.271958 144.493811-102.101866 203.571733 33.683956 10.383986 109.685856 38.33395 91.60588 68.84191-14.631981 24.685968-251.019672 15.761979-319.263582 8.07399-68.243911 7.68799-304.631601 16.611978-319.263582-8.07399-18.089976-30.49996 57.835924-58.427924 91.56588-68.82991-69.839909-59.077923-102.117866-140.889816-102.117866-203.583733 0 0-66.667913 108.267858-89.717883 105.481862-10.739986-1.299998-24.847967-59.287922 18.693975-199.407739 20.521973-66.047914 43.989942-120.955842 80.287895-211.557724C185.366427 196.125743 281.964301 0.012 512 0c227.473702 0.012 326.311573 192.265748 320.527581 429.925437 36.235953 90.445882 59.823922 145.699809 80.287894 211.555724 43.535943 140.119817 29.431961 198.105741 18.691976 199.407739z" p-id="3651" ></path></svg></i></div>`)
-          const getHeadImgInterval = setInterval(() => {
-            const headimgurl = document.querySelector('.avatar')?.style.backgroundImage
-            if (!headimgurl.includes("renderer/img/default_avatar")) {
-              clearInterval(getHeadImgInterval)
-              document.querySelector(".nostalgic-user-avatar-img").style.backgroundImage = headimgurl
-              let style = window.getComputedStyle(document.querySelector('.avatar__status'), null);
-              document.querySelector(".nostalgic-user-avatar__status").style.backgroundImage = style?.backgroundImage
-            }
+          //左上角QQ图标事件监听
+          const qqT = setInterval(() => {
+             //插入header面板
+             !document.querySelector('.nostalgic-user-avatar') && (topbar.insertAdjacentHTML('afterbegin', headerHTML))
+            const qqBtn = document.querySelector('.nostalgic-qq-icon')
+            const sidebarLower = document.querySelector('.sidebar__lower')
+            if (!qqBtn) return
+            clearInterval(qqT)
+            qqBtn.addEventListener('click', (e) => {
+              if (sidebarLower?.style?.display == 'none') {
+                sidebarLower && (sidebarLower.style.display = '')
+              } else {
+                sidebarLower && (sidebarLower.style.display = 'none')
+              }
 
-          }, 200);
+            })
+          }, 500);
+
 
           nostalgic.rendererReady();
-          //nostalgic.reSize()
-          settings.useOldThemeWin &&( window.resizeTo(310, window.outerHeight < 650 ? 825 : window.outerHeight))
 
-          if (!settings.initShow) {
-            settings.initShow = true
-            nostalgic.setSettings(settings);
-            setTimeout(() => {
-              alert("您已使用QQ怀旧模式,将鼠标放到头像上来显示侧栏＾-＾")
-            }, 2000);
-
+          //调整窗口大小
+          if (window.outerWidth >= 400) {
+            if(settings.useOldThemeWin){
+              window.resizeTo(295, window.outerHeight < 650 ? 825 : window.outerHeight)
+              windowStyleMini=true
+            }
+          
+          }else{
+            windowStyleMini=false
           }
 
+          setTimeout(() => {
+            nostalgic.updateStyleExt(windowStyleMini?'mini':'Big')
+          }, 100);
 
         } catch (error) {
           log("[渲染进程错误]", error);
@@ -94,44 +167,66 @@ const onload = async () => {
   }
 }
 onload()
+
+
+
 //定时更新头像和状态等
 const refreshDataT = setInterval(() => {
   if (LiteLoader.os.platform === "darwin") {
     clearInterval(refreshDataT)
   }
 
-  if (location.hash.includes("#/main/message")) {
+  if (location.hash.includes("#/main/message")||location.hash.includes('/main/contact/profile')) {
     try {
-      const styleWin = document.querySelector('.two-col-layout__aside')?.style?.cssText ?? ""
+
+
+      const styleWin = document.querySelector('.two-col-layout__main')?.style?.display == 'none' ? "none" : ''
+      //收缩侧栏按钮
       const switchBtn = document.querySelector('path[d^="M6 3H12.4C12.6965"]')?.parentElement?.parentElement?.parentElement
+      //调整按钮颜色过亮的问题
+      switchBtn && (switchBtn.style.opacity='0.55')
+      //左上角按钮区域
       const areaBtn = document.querySelector('.window-control-area')
+      //左上角按钮区域所有图标
       const areaBtns = document.querySelectorAll('.window-control-area i')
-      if (!styleWin?.includes("--max-width-aside: 320px")) {
+
+      //none为小面板模式
+      if (styleWin == 'none') {
+        //是否隐藏收缩侧栏按钮
         switchBtn?.style && (settings.hideSwitchBtn && (switchBtn.style.display = 'none'))
+        //如果使用header面板染色，则更新图标颜色 
         if (settings.useOldTheme) {
           areaBtn?.style && (areaBtn.style.backgroundColor = "none!important")
           for (let i = 0; i < areaBtns.length; i++) {
-            areaBtns[i].style.color = "var(--header-oldTheme-background-color-light)"
+            areaBtns[i].style.color = "var(--header-oldTheme-text-color)"
           }
         }
 
+        //变换为小面板
+        if(!windowStyleMini){
+          windowStyleMini=true
+          nostalgic.updateStyleExt('mini')
+
+        }
+
       } else {
+        //是否隐藏收缩侧栏按钮
         switchBtn?.style && (switchBtn.style.display = '')
+        //如果使用header面板染色，则更新图标颜色 
         if (settings.useOldTheme) {
           for (let i = 0; i < areaBtns.length; i++) {
             areaBtns[i].style.color &&= "var(--5f831aae)"
           }
-          areaBtn?.style && (areaBtn.style.backgroundColor = "var( --header-oldTheme-color)!important")
+
+        }
+        //变动为合并面板
+        if(windowStyleMini){
+          windowStyleMini=false
+          nostalgic.updateStyleExt('Big')
+
         }
       }
-      const headimgurl = document.querySelector('.avatar')?.style.backgroundImage
-      if (!headimgurl.includes("renderer/img/default_avatar")) {
-        const avatar = document.querySelector(".nostalgic-user-avatar-img")
-        avatar?.style && (avatar.style.backgroundImage = headimgurl)
-        const style = window.getComputedStyle(document.querySelector('.avatar__status'), null);
-        const avatarStatus = document.querySelector(".nostalgic-user-avatar__status")
-        avatarStatus?.style && (avatarStatus.style.backgroundImage = style?.backgroundImage)
-      }
+
     } catch (error) {
       log(error)
     }
@@ -140,30 +235,51 @@ const refreshDataT = setInterval(() => {
   }
 
 
-}, 1500)
+}, 500)
 
-const switchChage=(view,id)=>{
-    const domSwitch = view.querySelector(`#${id}`);
-    if (settings[id]) {
-      domSwitch.setAttribute("is-active", "");
+
+/**********设置界面相关***********/
+
+
+const switchChange = (view, id, settings) => {
+  const domSwitch = view.querySelector(`#${id}`);
+  if (settings[id]) {
+    domSwitch.setAttribute("is-active", "");
+  }
+  //添加点击监听
+  domSwitch.addEventListener("click", (event) => {
+    const isActive = event.currentTarget.hasAttribute("is-active");
+    if (isActive) {
+      event.currentTarget.removeAttribute("is-active")
+      settings[id] = false;
+    } else {
+      event.currentTarget.setAttribute("is-active", "");
+      settings[id] = true;
     }
-    //添加点击监听
-    domSwitch.addEventListener("click", (event) => {
-      const isActive = event.currentTarget.hasAttribute("is-active");
-      if (isActive) {
-        event.currentTarget.removeAttribute("is-active")
-        settings[id] = false;
-      } else {
-        event.currentTarget.setAttribute("is-active", "");
-        settings[id] = true;
-      }
-      // 将修改后的settings保存到settings.json
-      nostalgic.setSettings(settings);
-      if(id=="isDebug"){
-        nostalgic.setDebug(settings[id])
-      }
+    // 将修改后的settings保存到settings.json
+    console.log(settings[id], settings)
+    nostalgic.setSettings(settings);
+    if (id == "isDebug") {
+      nostalgic.setDebug(settings[id])
+    }
+    if (id == 'useOldTheme') {
+      const dom = view.querySelector('.nostalgic-header-config-ext')
+      settings[id] ? dom.classList.remove('nostalgic-disabled') : (dom.classList.contains('nostalgic-disabled') || dom.classList.add('nostalgic-disabled'))
+    }
 
-    });
+  });
+}
+const colorChange = (view, id, settings) => {
+  // 给pick-color(input)设置默认颜色
+  const pickColor = view.querySelector(`#${id}`);
+  pickColor.value = settings[id];
+  // 给pick-color(input)添加事件监听
+  pickColor.addEventListener("change", (event) => {
+    // 修改settings的themeColor值
+    settings[id] = event.target.value;
+    // 将修改后的settings保存到settings.json
+    nostalgic.setSettings(settings);
+  });
 }
 // 打开设置界面时触发
 export const onSettingWindowCreated = async view => {
@@ -172,23 +288,22 @@ export const onSettingWindowCreated = async view => {
     //设置设置界面的图标
     setTimeout(() => {
       document.querySelectorAll(".nav-item.liteloader").forEach(node => {
-      log(node.textContent)
-      if (node.textContent === "QQ怀旧模式") {
-        node.classList.add("nostalgic")
-        node.classList.add('appearance')
-        const htmlicon = `<svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 1024 1024" width="16" fill="currentColor"><path
-        d="M802.952533 341.265067C798.378667 166.229333 673.792 34.747733 512.136533 34.133333 350.208 34.747733 225.621333 166.229333 221.047467 341.1968a154.897067 154.897067 0 0 0-29.696 117.623467C140.629333 520.260267 107.861333 582.656 102.673067 654.7456c-1.6384 34.269867 4.096 70.2464 19.2512 90.862933 25.8048 35.157333 62.190933 25.668267 93.047466-6.485333 4.778667 9.079467 10.0352 18.363733 15.906134 27.8528-47.035733 32.904533-64.3072 95.163733-36.181334 141.312 23.210667 38.0928 70.519467 59.665067 133.666134 59.665067 87.927467 0 146.773333-19.182933 183.637333-51.2 37.819733 32.290133 96.324267 51.2 183.637333 51.2 63.146667 0 110.455467-21.572267 133.597867-59.5968 28.125867-46.216533 10.922667-108.475733-36.181333-141.380267 5.9392-9.557333 11.264-18.773333 15.9744-27.8528 30.856533 32.085333 67.242667 41.642667 93.047466 6.485333 15.223467-20.6848 20.957867-56.661333 19.319467-90.112-5.188267-72.840533-37.956267-135.304533-88.746667-196.608a154.965333 154.965333 0 0 0-29.696-117.623466z m49.152 343.586133a152.234667 152.234667 0 0 1-19.2512-32.426667l-39.1168-86.698666-24.917333 91.818666c-7.7824 28.740267-24.849067 63.488-53.998933 103.424l-30.446934 41.642667 50.176 11.741867c33.1776 7.7824 47.445333 40.277333 36.386134 58.504533-9.489067 15.5648-34.2016 26.8288-75.3664 26.8288-76.1856 0-119.466667-15.428267-142.336-37.6832a55.978667 55.978667 0 0 0-41.1648-16.042667 56.661333 56.661333 0 0 0-42.120534 16.861867c-22.1184 21.435733-65.3312 36.864-141.585066 36.864-41.096533 0-65.877333-11.264-75.298134-26.8288-11.0592-18.158933 3.208533-50.722133 36.386134-58.504533l50.176-11.741867-30.446934-41.642667c-29.149867-39.867733-46.216533-74.683733-53.998933-103.424l-24.917333-91.818666-39.1168 86.698666a152.1664 152.1664 0 0 1-19.2512 32.426667 157.4912 157.4912 0 0 1-1.092267-26.0096c4.164267-58.368 35.293867-113.322667 83.899733-169.096533l13.858134-15.9744-8.055467-19.524267c-6.144-14.9504-2.730667-54.340267 18.8416-76.049067l10.8544-10.922666-1.024-15.36c0-144.1792 97.006933-249.0368 222.958933-249.514667 125.610667 0.477867 222.685867 105.335467 222.685867 248.763733 0 1.092267-1.024 16.110933-1.024 16.110934l10.8544 10.922666c21.572267 21.7088 25.053867 61.166933 18.8416 75.9808l-8.123733 19.592534 13.9264 15.9744c48.469333 55.569067 79.598933 110.523733 83.899733 169.437866 0.4096 8.533333-0.136533 17.749333-1.092267 25.668267z"
-        /></svg>`
-        node.querySelector(".q-icon.icon").insertAdjacentHTML('afterbegin', htmlicon)
-      } else if (!node.querySelector(".q-icon.icon>svg")) {
+        log(node.textContent)
+        if (node.textContent === "QQ怀旧模式") {
+          node.classList.add("nostalgic")
+          node.classList.add('appearance')
+          const htmlicon = `<svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 1024 1024" width="16" fill="currentColor">
+          <path d="M802.952533 341.265067C798.378667 166.229333 673.792 34.747733 512.136533 34.133333 350.208 34.747733 225.621333 166.229333 221.047467 341.1968a154.897067 154.897067 0 0 0-29.696 117.623467C140.629333 520.260267 107.861333 582.656 102.673067 654.7456c-1.6384 34.269867 4.096 70.2464 19.2512 90.862933 25.8048 35.157333 62.190933 25.668267 93.047466-6.485333 4.778667 9.079467 10.0352 18.363733 15.906134 27.8528-47.035733 32.904533-64.3072 95.163733-36.181334 141.312 23.210667 38.0928 70.519467 59.665067 133.666134 59.665067 87.927467 0 146.773333-19.182933 183.637333-51.2 37.819733 32.290133 96.324267 51.2 183.637333 51.2 63.146667 0 110.455467-21.572267 133.597867-59.5968 28.125867-46.216533 10.922667-108.475733-36.181333-141.380267 5.9392-9.557333 11.264-18.773333 15.9744-27.8528 30.856533 32.085333 67.242667 41.642667 93.047466 6.485333 15.223467-20.6848 20.957867-56.661333 19.319467-90.112-5.188267-72.840533-37.956267-135.304533-88.746667-196.608a154.965333 154.965333 0 0 0-29.696-117.623466z m49.152 343.586133a152.234667 152.234667 0 0 1-19.2512-32.426667l-39.1168-86.698666-24.917333 91.818666c-7.7824 28.740267-24.849067 63.488-53.998933 103.424l-30.446934 41.642667 50.176 11.741867c33.1776 7.7824 47.445333 40.277333 36.386134 58.504533-9.489067 15.5648-34.2016 26.8288-75.3664 26.8288-76.1856 0-119.466667-15.428267-142.336-37.6832a55.978667 55.978667 0 0 0-41.1648-16.042667 56.661333 56.661333 0 0 0-42.120534 16.861867c-22.1184 21.435733-65.3312 36.864-141.585066 36.864-41.096533 0-65.877333-11.264-75.298134-26.8288-11.0592-18.158933 3.208533-50.722133 36.386134-58.504533l50.176-11.741867-30.446934-41.642667c-29.149867-39.867733-46.216533-74.683733-53.998933-103.424l-24.917333-91.818666-39.1168 86.698666a152.1664 152.1664 0 0 1-19.2512 32.426667 157.4912 157.4912 0 0 1-1.092267-26.0096c4.164267-58.368 35.293867-113.322667 83.899733-169.096533l13.858134-15.9744-8.055467-19.524267c-6.144-14.9504-2.730667-54.340267 18.8416-76.049067l10.8544-10.922666-1.024-15.36c0-144.1792 97.006933-249.0368 222.958933-249.514667 125.610667 0.477867 222.685867 105.335467 222.685867 248.763733 0 1.092267-1.024 16.110933-1.024 16.110934l10.8544 10.922666c21.572267 21.7088 25.053867 61.166933 18.8416 75.9808l-8.123733 19.592534 13.9264 15.9744c48.469333 55.569067 79.598933 110.523733 83.899733 169.437866 0.4096 8.533333-0.136533 17.749333-1.092267 25.668267z" /></svg>`
+          node.querySelector(".q-icon.icon").insertAdjacentHTML('afterbegin', htmlicon)
+        } else if (!node.querySelector(".q-icon.icon>svg")) {
 
-        const htmlicon = `<svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 1024 1024" width="16" fill="currentColor"><path
+          const htmlicon = `<svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 1024 1024" width="16" fill="currentColor"><path
         d="M310.954667 844.842667c-11.093333-19.2 7.509333-47.530667 26.752-58.666667a78.762667 78.762667 0 1 0-78.762667-136.405333c-19.242667 11.093333-53.077333 13.056-64.213333-6.186667l-73.173334-126.72a26.24 26.24 0 0 1 9.6-35.882667l115.968-66.986666a131.84 131.84 0 0 1-26.24-45.44 131.328 131.328 0 0 1 249.088-83.2l70.485334-40.704c12.586667-7.253333 28.629333-2.944 35.84 9.642666l66.986666 115.968a131.84 131.84 0 0 1 45.482667-26.282666 131.328 131.328 0 0 1 83.2 249.088l40.661333 70.485333c7.253333 12.586667 2.986667 28.629333-9.6 35.882667l-409.301333 236.288a26.24 26.24 0 0 1-35.84-9.6l-46.933333-81.28z m174.848-507.989334a42.666667 42.666667 0 0 1-61.781334-23.381333l-3.84-11.434667a78.762667 78.762667 0 1 0-133.717333 77.226667l8.021333 8.96a42.666667 42.666667 0 0 1-10.666666 65.28l-103.68 59.818667 52.522666 90.965333a131.285333 131.285333 0 0 1 131.285334 227.413333l26.282666 45.44 363.818667-210.048-33.578667-58.197333a42.666667 42.666667 0 0 1 23.381334-61.781333l11.392-3.84a78.762667 78.762667 0 1 0-77.226667-133.717334l-8.96 8.021334a42.666667 42.666667 0 0 1-65.194667-10.666667l-59.861333-103.68-58.197333 33.621333z" p-id="15049"></path><path d="M310.954667 844.842667c-11.093333-19.2 7.509333-47.530667 26.752-58.666667a78.762667 78.762667 0 1 0-78.762667-136.405333c-19.242667 11.093333-53.077333 13.056-64.213333-6.186667l-73.173334-126.72a26.24 26.24 0 0 1 9.6-35.882667l115.968-66.986666a131.84 131.84 0 0 1-26.24-45.44 131.328 131.328 0 0 1 249.088-83.2l70.485334-40.704c12.586667-7.253333 28.629333-2.944 35.84 9.642666l66.986666 115.968a131.84 131.84 0 0 1 45.482667-26.282666 131.328 131.328 0 0 1 83.2 249.088l40.661333 70.485333c7.253333 12.586667 2.986667 28.629333-9.6 35.882667l-409.301333 236.288a26.24 26.24 0 0 1-35.84-9.6l-46.933333-81.28z m174.848-507.989334a42.666667 42.666667 0 0 1-61.781334-23.381333l-3.84-11.434667a78.762667 78.762667 0 1 0-133.717333 77.226667l8.021333 8.96a42.666667 42.666667 0 0 1-10.666666 65.28l-103.68 59.818667 52.522666 90.965333a131.285333 131.285333 0 0 1 131.285334 227.413333l26.282666 45.44 363.818667-210.048-33.578667-58.197333a42.666667 42.666667 0 0 1 23.381334-61.781333l11.392-3.84a78.762667 78.762667 0 1 0-77.226667-133.717334l-8.96 8.021334a42.666667 42.666667 0 0 1-65.194667-10.666667l-59.861333-103.68-58.197333 33.621333z"
         /></svg>`
-        //强迫症添加图标..
-        node.querySelector(".q-icon.icon").insertAdjacentHTML('afterbegin', htmlicon)
-      }
-    })
+          //强迫症添加图标..
+          node.querySelector(".q-icon.icon").insertAdjacentHTML('afterbegin', htmlicon)
+        }
+      })
     }, 500);
 
     const html_file_path = `local:///${plugin_path}/src/settings/main.html`;
@@ -197,41 +312,24 @@ export const onSettingWindowCreated = async view => {
 
     // 获取设置
     const settings = await nostalgic.getSettings();
-    const themeColor = settings.themeColor;
-    const themeColor2 = settings.themeColor2;
-    // 给pick-color(input)设置默认颜色
-    const pickColor = view.querySelector(".pick-color");
-    pickColor.value = themeColor;
 
-    // 给pick-color(input)添加事件监听
-    pickColor.addEventListener("change", (event) => {
-      // 修改settings的themeColor值
-      settings.themeColor = event.target.value;
-      // 将修改后的settings保存到settings.json
-      nostalgic.setSettings(settings);
-    });
-
-    const pickColor2 = view.querySelector(".pick-color2");
-    pickColor2.value = themeColor2;
-    pickColor2.addEventListener("change", (event) => {
-      settings.themeColor2 = event.target.value;
-      nostalgic.setSettings(settings);
-    });
-    // 背景颜色透明
+    // 颜色透明设置
     const backgroundOpacity = settings.backgroundOpacity;
-    // 给pick-opacity(input)设置默认值
     const pickOpacity = view.querySelector(".pick-opacity");
     pickOpacity.value = backgroundOpacity;
-    // 给pick-opacity(input)添加事件监听
     pickOpacity.addEventListener("change", (event) => {
-      // 修改settings的backgroundOpacity值
       settings.backgroundOpacity = event.target.value;
-      // 将修改后的settings保存到settings.json
       nostalgic.setSettings(settings);
     });
-    const switchSettingList=['useOldTheme','useOldThemeWin','isDebug','useOldThemeMenu','hideSwitchBtn','useOldThemeMegList']
-    switchSettingList.forEach((id)=>{
-      switchChage(view,id)
+    //颜色 设置
+    const colorSettingList = ['themeColor', 'themeColor2', 'themeColor3']
+    colorSettingList.forEach((id) => {
+      colorChange(view, id, settings)
+    })
+    //配置设置
+    const switchSettingList = ['useOldTheme', 'useOldThemeWin', 'isDebug', 'hideSwitchBtn', 'useOldThemeMegList']
+    switchSettingList.forEach((id) => {
+      switchChange(view, id, settings)
     })
 
   } catch (error) {

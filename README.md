@@ -12,9 +12,6 @@
 3. 启动/重启 QQNT
 
 
-![image](https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/7dd127bf-b56b-4e0e-b404-10cc6e4583cb)
-![image](https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/9174d205-abc4-4db5-aa1e-de2f49118abd)
-
 
 
 https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/b7cf0d1b-88f9-4056-9d43-080db68433c5

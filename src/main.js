@@ -8,7 +8,7 @@ function log(...args) {
     console.log(`\x1b[35m[QQ怀旧模式]\x1b[0m`, ...args);
 }
 let mainWindow
-function updateStyle(webContent, settingsPath) {
+function updateStyle(webContent, settingsPath,winStyle) {
 
     try {
         // 读取settings.json
@@ -17,10 +17,13 @@ function updateStyle(webContent, settingsPath) {
         const useOldTheme = config.useOldTheme;
         const themeColor = config.themeColor;
         const themeColor2 = config.themeColor2;
-        const backgroundOpacity = config.backgroundOpacity;
-        const backgroundOpacityHex = Math.round(backgroundOpacity * 2.55).toString(16).padStart(2, "0");
-
-        const csspath = path.join(__dirname, "/settings/style.css");
+        const themeColor3 = config.themeColor3;
+        const textOpacity = config.backgroundOpacity/100;
+        const textOpacityHex = Math.round(config.backgroundOpacity * 2.55).toString(16).padStart(2, "0");
+        let csspath = path.join(__dirname, "/settings/style.css");
+        if(winStyle=='Big'){
+            csspath = path.join(__dirname, "/settings/styleBig.css");
+        }
         fs.readFile(csspath, "utf-8", (err, data) => {
             if (err) {
                 console.error(err.message)
@@ -31,14 +34,16 @@ function updateStyle(webContent, settingsPath) {
                 preloadString = `:root {
                     --header-oldTheme-color: ${themeColor};
                     --header-oldTheme-color2: ${themeColor2};
+                    --header-oldTheme-color3: ${themeColor3};
+                    --header-oldTheme-color3-opacity: ${textOpacity};
                     --header-oldTheme-color-linear:linear-gradient(-20deg,${themeColor} 0%, ${themeColor2} 100%);
-                    --header-oldTheme-background-color-light: #FFFFFF${backgroundOpacityHex};
-                    --header-oldTheme-background-color-dark: #171717${backgroundOpacityHex};
+                    --header-oldTheme-text-color: ${themeColor3}${textOpacityHex};
                     --header-oldTheme-theme-tag-color: ${themeColor + "3f"};
                     --header-oldTheme-text-selected-color: ${themeColor + "7f"};
                 }`
 
             }
+            //向渲染进程发送updateStyle消息
             if(mainWindow){
                 mainWindow.webContents.send(
                     "LiteLoader.nostalgic.updateStyle",
@@ -53,10 +58,6 @@ function updateStyle(webContent, settingsPath) {
                 });
             }
 
-        //     webContent.send(
-        //         "LiteLoader.nostalgic.updateStyle",
-        //         preloadString + "\n\n" + data
-        //     );
          });
     } catch (error) {
         log(error.message)
@@ -77,11 +78,10 @@ if (!fs.existsSync(settingsPath)) {
         "useOldTheme": true,
         "themeColor": "#21d4fd",
         "themeColor2":"#b721ff",
+        "themeColor3":"#b721ff",
         "backgroundOpacity": "85",
-        "initShow":false,
         "isDebug":false,
         "useOldThemeWin":true,
-        "useOldThemeMenu":false,
         "hideSwitchBtn":true,
         "useOldThemeMegList":false
     }));
@@ -101,14 +101,15 @@ if (!fs.existsSync(settingsPath)) {
         config.themeColor2 = "#b721ff";
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
+    if (!config.themeColor3) {
+        config.themeColor3 = "#ffffff";
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
     if (!config.backgroundOpacity) {
-        config.backgroundOpacity = "85";
+        config.backgroundOpacity = "90";
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
-    if (!config.initShow) {
-        config.initShow = false;
-        fs.writeFileSync(settingsPath, JSON.stringify(config));
-    }
+
     if (config.useOldThemeWin==undefined||config.useOldThemeWin==null) {
         config.useOldThemeWin = true;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
@@ -117,10 +118,7 @@ if (!fs.existsSync(settingsPath)) {
         config.useOldThemeMegList = true;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
-    if (!config.useOldThemeMenu) {
-        config.useOldThemeMenu = false;
-        fs.writeFileSync(settingsPath, JSON.stringify(config));
-    }
+
     if (config.hideSwitchBtn==undefined||config.hideSwitchBtn==null) {
         config.hideSwitchBtn = true;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
@@ -140,13 +138,13 @@ ipcMain.on(
     }
 );
 
-// 监听渲染进程的updateStyle事件
+// 监听渲染进程的updateStyleExt事件
 ipcMain.on(
-    "LiteLoader.nostalgic.updateStyle",
-    (event, settingsPath) => {
+    "LiteLoader.nostalgic.updateStyleExt",
+    (event, winStyle) => {
         const window = BrowserWindow.fromWebContents(event.sender);
-
-        updateStyle(window.webContents, settingsPath);
+        const settingsPath = path.join(pluginDataPath, "settings.json");
+        updateStyle(window.webContents, settingsPath,winStyle);
     });
 
 // 监听渲染进程的watchCSSChange事件
@@ -201,7 +199,6 @@ ipcMain.handle(
 ipcMain.handle(
     "LiteLoader.nostalgic.getProfileDetailInfo",
     (event) => {
-        //log("LiteLoader.nostalgic.getProfileDetailInfo",userInfo)
         return userInfo;
     }
 );
@@ -228,7 +225,7 @@ ipcMain.handle(
     "LiteLoader.nostalgic.setDebug",
     (event, open) => {
         const window = BrowserWindow.fromWebContents(event.sender);
-        filepath = path.join(__dirname, "/settings/style.css");
+        const filepath = path.join(__dirname, "/settings/style.css");
         open?watchCSSChange(window.webContents, settingsPath):(fs.unwatchFile(filepath),null);
 });
 
@@ -254,7 +251,12 @@ module.exports.onBrowserWindowCreated = window => {
     window.webContents.send = patched_send;
     window.webContents.on("did-stop-loading", () => {
         if (window.webContents.getURL().indexOf("#/main/message") !== -1) {
+
             mainWindow = window;
+             
+            mainWindow.setMinimumSize(280, 600);
+            //  mainWindow.setMaximumSize(400, 9999);
+            // mainWindow.setResizable(false);
         }
     });
     const settingsPath = path.join(pluginDataPath, "settings.json");

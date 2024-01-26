@@ -1,12 +1,13 @@
 <style>
-    .nostalgic input[type="range"],.nostalgic input[type="range"]:focus {
+    .nostalgic input[type="range"],
+    .nostalgic input[type="range"]:focus {
         -webkit-appearance: none;
         appearance: none;
         margin: 0;
         outline: 0;
         background-color: transparent;
         width: 300px;
-        border: none!important;
+        border: none !important;
     }
 
     .nostalgic input[type="range"]::-webkit-slider-runnable-track {
@@ -43,16 +44,20 @@
 
     .nostalgic-color {
         display: flex;
-    align-items: center;
+        align-items: center;
     }
 
     .nostalgic-preview img {
         border-radius: 6px;
         width: 235px;
     }
+    .nostalgic-disabled{
+        pointer-events: none;
+        filter: opacity(0.5);
+    }
 </style>
 
-<setting-section data-title="旧版外观" class="nostalgic">
+<setting-section data-title="Header面板" class="nostalgic">
     <setting-panel>
         <setting-list data-direction="column">
             <setting-item data-direction="row">
@@ -62,16 +67,24 @@
                 </div>
                 <setting-switch id="useOldTheme"></setting-switch>
             </setting-item>
-             <setting-divider data-orientation="horizontal"></setting-divider>
-
+            <setting-divider data-orientation="horizontal"></setting-divider>
+            <div class="nostalgic-header-config-ext">
             <setting-item data-direction="row">
                 <setting-text>Header面板背景颜色</setting-text>
                 <div class="nostalgic-color">
-                    左：<input type="color" value="#ff0000"
-                        class="q-button q-button--small q-button--secondary  pick-color" />
-                    右：<input type="color" value="#ff0000"
-                        class="q-button q-button--small q-button--secondary  pick-color2" />
+                    左：<input type="color" value="#ff0000" id="themeColor2"
+                    class="q-button q-button--small q-button--secondary  pick-color2" />
+                    右：<input type="color" value="#ff0000" id="themeColor"
+                    class="q-button q-button--small q-button--secondary  pick-color" />
                 </div>
+
+            </setting-item>
+            <setting-divider data-orientation="horizontal"></setting-divider>
+            <setting-item data-direction="row">
+                <setting-text>Header面板文字颜色</setting-text>
+                <input type="color" value="#ffffff" id="themeColor3"
+                        class="q-button q-button--small q-button--secondary  pick-color-text" />
+                   
 
             </setting-item>
             <setting-divider data-orientation="horizontal"></setting-divider>
@@ -80,7 +93,17 @@
                 <input type="range" value="1" min="0" max="100" step="1"
                     class="q-button q-button--small q-button--secondary pick-opacity" />
             </setting-item>
-            <setting-divider data-orientation="horizontal"></setting-divider>
+            </div>
+
+
+
+        </setting-list>
+    </setting-panel>
+</setting-section>
+<setting-section data-title="界面变动" class="nostalgic">
+    <setting-panel>
+        <setting-list data-direction="column">
+
 
             <setting-item data-direction="row">
                 <div>
@@ -94,7 +117,7 @@
 
             <setting-item data-direction="row">
                 <div>
-                    <setting-text>隐藏折叠按钮(重启生效)</setting-text>
+                    <setting-text>隐藏右上角的折叠按钮(重启生效)</setting-text>
                     <setting-text data-type="secondary">小面板窗口模式时隐藏折叠按钮</setting-text>
                 </div>
                 <setting-switch id="hideSwitchBtn"></setting-switch>
@@ -102,15 +125,8 @@
             <setting-divider data-orientation="horizontal"></setting-divider>
 
 
-            <setting-item data-direction="row">
-                <div>
-                    <setting-text>工具菜单放到底部</setting-text>
-                    <setting-text data-type="secondary">仿旧版本QQ将工具菜单放到底部</setting-text>
-                </div>
-                <setting-switch id="useOldThemeMenu"></setting-switch>
-            </setting-item>
 
-             <setting-item data-direction="row">
+            <setting-item data-direction="row">
                 <div>
                     <setting-text>旧版列表样式</setting-text>
                     <setting-text data-type="secondary">仿旧版本QQ列表样式、置顶样式</setting-text>
@@ -118,6 +134,13 @@
                 <setting-switch id="useOldThemeMegList"></setting-switch>
             </setting-item>
 
+            <setting-item data-direction="row" class="nostalgic-disabled">
+                <div>
+                    <setting-text>工具菜单放到底部</setting-text>
+                    <setting-text  style="color: red!important;font-size: 12px;">提示: 点击左上角的QQ小图标可以显示/隐藏菜单</setting-text>
+                </div>
+                <setting-switch id="useOldThemeMenu" is-active></setting-switch>
+            </setting-item>
         </setting-list>
     </setting-panel>
 </setting-section>

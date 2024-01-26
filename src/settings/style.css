@@ -3,24 +3,25 @@
     top: 3px;
 }
 
+
+/* --------header面板----------- */
+
 /*左上角QQ图标*/
 .nostalgic-qq-icon {
     float: left;
-    position: absolute;
+    position: fixed;
     left: 0;
     padding: 0;
     top: 3px;
-    pointer-events: none;
+    display: block !important;
     left: 12px;
-    position: absolute;
+    app-region: no-drag!important;
+    pointer-events: all;
     top: 9px;
     z-index: 2100;
     left: 1;
     opacity: .25;
 }
-
-/* --------header----------- */
-
 .nostalgic-user-avatar {
     height: 52px;
     display: flex;
@@ -63,7 +64,7 @@
     align-items: flex-start;
     width: calc(100% - 55px);
     overflow: hidden;
-    /* width: 164px;*/
+
 }
 
 #nostalgic-user-desc {
@@ -83,6 +84,7 @@
 
 #nostalgic-user-nickname {
     max-width: calc(100% - 10px);
+    color: var(--header-oldTheme-text-color);
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -102,17 +104,50 @@
 #nostalgic-user-signature {
     font-size: 12px;
     width: 100%;
+    color: var(--header-oldTheme-text-color);
 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.container .contact-top-bar .search-input {
+    .q-input__prefix .q-icon,
+    .q-input__inner::placeholder {
+        color: var(--header-oldTheme-text-color) !important;
+
+    }
+}
+.container .contact-top-bar .search-input .q-input__clear i,
+.container .contact-top-bar .search-input .q-input__inner{
+    color: var(--header-oldTheme-text-color) !important;
+
+}
+.container .contact-adder-btn {
+    .q-icon {
+        color: var(--header-oldTheme-text-color) !important;
+
+    }
+}
+
+.nostalgic-qq-icon .q-icon {
+    color: var(--header-oldTheme-text-color) !important;
+}
+
+.contact-top-bar {
+    background-image: var(--header-oldTheme-color-linear);
+    min-height: 100px;
+    /* backdrop-filter: hue-rotate(23deg); */
+    /*
+    background-size: 500%;
+    animation: bgAnimation 1s linear infinite;*/
+}
 
 /**********工具栏放底部***********/
-/**--
+
 .container .sidebar .sidebar__lower{
     position: fixed!important;
     bottom: 0;
+    left:0; 
     width: 100%!important;
     left: 0!important;
     display: flex;
@@ -136,39 +171,40 @@ body .container .draggable-view__container.sidebar {
     justify-content: space-evenly;
     justify-content: space-around;
     align-items: center;
-     opacity: 0.6;
+    opacity: 0.6;
+    box-shadow: rgba(var(--el-color-primary-rgb), 0.12) 0px -20px 28px -2px;
     .func-menu__item{
         padding-bottom: 0;
         margin-bottom: 0;
     }
     .func-menu__item_wrap{
-        padding: 10px;
+        padding:10px 0px;
+      
     }
 
+}
+.container .sidebar .func-menu>div{
+    cursor: pointer;
 }
 .container .sidebar .func-menu>div[id='demoModeBtn']{
         padding-top: 16px;
         margin-right: 16px;
         margin-left: 16px;
 }
+#app .container .sidebar .func-menu svg{
+    width:20px!important;
+    height:20px!important;
+}
 .list-toggler .viewport-list__inner{
     padding-bottom: 45px;
 }
---**/
 
-/*隐藏式侧栏*/
-.tab-container {
-    transition: margin-left .3s;
-}
 
-.sidebar:hover~.tab-container {
-    transition: margin-left .3s ease-in-out;
-    margin-left: 85px;
-}
+/*隐藏侧栏*/
 
 .container .sidebar {
     position: absolute;
-    left: -85px;
+    left: -85px!important;
     width: 85px !important;
     transition: all .3s ease-in-out;
     overflow: visible;
@@ -180,15 +216,14 @@ body .container .draggable-view__container.sidebar {
     z-index: 999;
 
     .sidebar-nav {
-        width: 85px;
+        width: 85px!important;
     }
-
+    /**头像浮动出来**/
     .sidebar__avatar {
-        transform: scale(calc(36 / 36)) translateX(86px) translateY(8px);
+        transform: scale(calc(36 / 36)) translateX(86px) translateY(8px)!important;
         transition: all .3s ease-in-out;
         opacity: 1;
         cursor: pointer;
-
         .user-avatar {
             width: 52px !important;
             height: 52px !important;
@@ -196,77 +231,11 @@ body .container .draggable-view__container.sidebar {
         }
     }
 
-    &:hover {
-        left: 0;
-
-        .sidebar__avatar {
-            transform: scale(calc(36 / 36));
-
-            opacity: 1;
-
-        }
-    }
-
-
 }
 
 
 
 
-@media (prefers-color-scheme: light) {
-    .message-panel .contact-top-bar {
-        background-image: var(--header-oldTheme-color-linear);
-        color: var(--header-oldTheme-background-color-light);
-        /*
-		background-size: 500%;
-
-		animation: bgAnimation 1s linear infinite;*/
-    }
-
-    .nostalgic-qq-icon .q-icon {
-        color: var(--header-oldTheme-background-color-light) !important;
-    }
-
-    .container .message-panel .contact-top-bar .search-input {
-
-        .q-input__prefix .q-icon,
-        .q-input__inner::placeholder {
-            color: var(--header-oldTheme-background-color-light) !important;
-        }
-    }
-
-    .message-panel .recent-contact .contact-adder-btn {
-        .q-icon {
-            color: var(--header-oldTheme-background-color-light) !important;
-        }
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    .message-panel .contact-top-bar {
-
-        background-image: var(--header-oldTheme-color-linear);
-        color: var(--header-oldTheme-background-color-dark);
-    }
-
-    .nostalgic-qq-icon .q-icon {
-        color: var(--header-oldTheme-background-color-dark) !important;
-    }
-
-    .container .message-panel .contact-top-bar .search-input {
-
-        .q-input__prefix .q-icon,
-        .q-input__inner::placeholder {
-            color: var(--header-oldTheme-background-color-dark) !important;
-        }
-    }
-
-    .message-panel .recent-contact .contact-adder-btn {
-        .q-icon {
-            color: var(--header-oldTheme-background-color-dark) !important;
-        }
-    }
-}
 
 /*旧版消息列表**/
 
@@ -285,11 +254,11 @@ body .container .draggable-view__container.sidebar {
     height: 0;
     border-width: 6px;
     border-style: solid;
-    border-color: var(--on_bg_text) transparent transparent transparent;
+    border-color: var(--global-brand_standard) transparent transparent transparent;
     transform: rotate(135deg);
     position: absolute;
-    top: -5px;
-    left: -5px;
+    top: -4px;
+    left: -4px;
 
 }
 ++*/
@@ -335,4 +304,81 @@ body .container .draggable-view__container.sidebar {
 
 .contact-layout .contact-top-bar .search-result {
     top: 100px !important;
+}
+
+#nostalgic-leftTools {
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* color: var(--header-oldTheme-background-color-light); */
+}
+
+
+.sidebar__nav {
+    transition: all .3s ease-in-out;
+    position: fixed !important;
+    bottom: 49px;
+    display: flex;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    backdrop-filter: blur(20px);
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 100vh;
+    background: var(--bg_nav);
+    padding-bottom: 58px;
+
+}
+
+.sidebar__nav .nav-item {
+    padding: 40px 25px 10px 35px;
+    width: 48px;
+    height: 48px;
+
+}
+
+.sidebar__nav .nav-item .tab-item-mask {
+    width: 48px;
+    height: 48px;
+}
+
+.nav .nav-item-more {
+    margin-bottom: 8px !important;
+}
+
+.sidebar-context-menu {
+    left: 0px !important;
+    width: 100%;
+}
+.sidebar__nav_show{
+    top: calc(100vh - 280px)!important;
+  }
+/* .q-context-menu.q-context-menu__mixed-type .q-context-menu-item:last-child{
+        display: none;
+    } */
+.version-tip-button {
+    display: none;
+}
+
+/**旧版本QQ处理**/
+.two-col-layout .search-result {
+    /* background: var(--bg_list)!important; */
+    top: 140px!important;
+    height: calc(100vh - 180px)!important;
+}
+.contact .search-result {
+    /* background: var(--bg_list)!important; */
+    top:100px!important;;
+    height: calc(100vh - 100px)!important;
+}
+.contact .contact-layout__content-area{
+    height: calc(100vh - 100px)!important;
 }

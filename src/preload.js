@@ -1,8 +1,13 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
+
+//on 监听主进程发来的消息
+//send 用于向主进程发送消息
+//invoke 发起异步调用到主进程，并等待返回结果
 contextBridge.exposeInMainWorld("nostalgic", {
 
     updateStyle: (callback) => ipcRenderer.on("LiteLoader.nostalgic.updateStyle", callback),
+    updateStyleExt: (winStyle) => ipcRenderer.send("LiteLoader.nostalgic.updateStyleExt", winStyle),
     reSize: () => ipcRenderer.send("LiteLoader.nostalgic.reSize"),
     rendererReady: () => ipcRenderer.send("LiteLoader.nostalgic.rendererReady"),
     getSettings: () => ipcRenderer.invoke("LiteLoader.nostalgic.getSettings"),
