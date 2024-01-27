@@ -111,6 +111,7 @@
     white-space: nowrap;
 }
 .container .contact-top-bar .search-input {
+	background: var(--fill_standard_secondary)!important;
     .q-input__prefix .q-icon,
     .q-input__inner::placeholder {
         color: var(--header-oldTheme-text-color) !important;

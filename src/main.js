@@ -77,8 +77,8 @@ if (!fs.existsSync(settingsPath)) {
     fs.writeFileSync(settingsPath, JSON.stringify({
         "useOldTheme": true,
         "themeColor": "#21d4fd",
-        "themeColor2":"#b721ff",
-        "themeColor3":"#b721ff",
+        "themeColor2":"#3316c5",
+        "themeColor3":"#ffffff",
         "backgroundOpacity": "85",
         "isDebug":false,
         "useOldThemeWin":true,
@@ -98,7 +98,7 @@ if (!fs.existsSync(settingsPath)) {
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
     if (!config.themeColor2) {
-        config.themeColor2 = "#b721ff";
+        config.themeColor2 = "#3316c5";
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
     if (!config.themeColor3) {
