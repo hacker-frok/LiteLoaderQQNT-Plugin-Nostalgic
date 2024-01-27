@@ -28,9 +28,6 @@
 
 ## 效果
 
+
+![image](https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/c80d82ce-5a4d-4732-9cd5-b567c00024f1)
 ![2](https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/ff54396a-5cdd-434c-a0d9-b4374a2beff2)
-
-
-https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic/assets/157203458/b7cf0d1b-88f9-4056-9d43-080db68433c5
-
-
