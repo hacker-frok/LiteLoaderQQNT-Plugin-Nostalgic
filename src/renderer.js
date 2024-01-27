@@ -4,7 +4,7 @@ function log(...args) {
   console.log(`\x1b[35m[QQ怀旧模式]\x1b[0m`, ...args);
   nostalgic.logToMain(...args);
 }
-let windowStyleMini=false
+let windowStyleMini = false
 //菜单按钮
 const BTN_MENU_HTML = `
     <div id="nostalgic-leftTools" style="transform:rotate(268deg)" class="func-menu__item_wrap" >
@@ -54,7 +54,7 @@ const setExtBtn = () => {
   }
 
 }
-const settings = await nostalgic.getSettings();
+let settingsConfig = await nostalgic.getSettings();
 
 const onload = async () => {
 
@@ -107,23 +107,31 @@ const onload = async () => {
               if (config.useOldThemeMegList) {
                 message = message.replace("/*++", '').replace('++*/', '')
               }
-                element.textContent = message;
-                //在配置界面调整，强小面板模式
-                if (document.querySelector('.nostalgic-user-avatar')&&window.outerWidth >= 400&&!message.includes('大面板')) {
-                 
-                    window.resizeTo(295, window.outerHeight < 650 ? 825 : window.outerHeight)
-                    windowStyleMini=true
-                
-                }
-               
-              
-              });
+              element.textContent = message;
+              //在配置界面调整，强小面板模式
+              if (document.querySelector('.nostalgic-user-avatar') && window.outerWidth >= 400 && !message.includes('大面板')) {
+
+                window.resizeTo(295, window.outerHeight < 650 ? 825 : window.outerHeight)
+                windowStyleMini = true
+
+              }
+              if (!message.includes('大面板')) {
+
+                nostalgic.getSettings().then((settings) => {
+                  changeBtn(settings)
+                  //console.log(settings)
+                  changeAreaBtn(settings)
+
+                })
+              }
+
+            });
 
           });
           //左上角QQ图标事件监听
           const qqT = setInterval(() => {
-             //插入header面板
-             !document.querySelector('.nostalgic-user-avatar') && (topbar.insertAdjacentHTML('afterbegin', headerHTML))
+            //插入header面板
+            !document.querySelector('.nostalgic-user-avatar') && (topbar.insertAdjacentHTML('afterbegin', headerHTML))
             const qqBtn = document.querySelector('.nostalgic-qq-icon')
             const sidebarLower = document.querySelector('.sidebar__lower')
             if (!qqBtn) return
@@ -137,23 +145,23 @@ const onload = async () => {
 
             })
           }, 500);
-
+          changeAreaBtn(settingsConfig)
 
           nostalgic.rendererReady();
 
           //调整窗口大小
           if (window.outerWidth >= 400) {
-            if(settings.useOldThemeWin){
+            if (settingsConfig.useOldThemeWin) {
               window.resizeTo(295, window.outerHeight < 650 ? 825 : window.outerHeight)
-              windowStyleMini=true
+              windowStyleMini = true
             }
-          
-          }else{
-            windowStyleMini=false
+
+          } else {
+            windowStyleMini = false
           }
 
           setTimeout(() => {
-            nostalgic.updateStyleExt(windowStyleMini?'mini':'Big')
+            nostalgic.updateStyleExt(windowStyleMini ? 'mini' : 'Big')
           }, 100);
 
         } catch (error) {
@@ -168,63 +176,73 @@ const onload = async () => {
 }
 onload()
 
+//处理收缩侧栏按钮
+const changeBtn = (settings) => {
+  //收缩侧栏按钮
+  const switchBtn = document.querySelector('path[d^="M6 3H12.4C12.6965"]')?.parentElement?.parentElement?.parentElement
+  //调整按钮颜色过亮的问题
+  switchBtn && (switchBtn.style.opacity = '0.55')
+  switchBtn?.style && (settings.hideSwitchBtn ? (switchBtn.style.display = 'none') : (switchBtn.style.display = ''))
+}
 
+
+//处理右上角按钮区域
+const changeAreaBtn = (settings) => {
+
+  //右上角按钮区域
+  const areaBtn = document.querySelector('.window-control-area')
+  //右上角按钮区域所有图标
+  const areaBtns = document.querySelectorAll('.window-control-area i')
+  if (windowStyleMini) {
+    //如果使用header面板染色，则更新图标颜色 
+    if (settings.useOldTheme) {
+      areaBtn?.style && (areaBtn.style.backgroundColor = "none!important")
+      for (let i = 0; i < areaBtns.length; i++) {
+        areaBtns[i].style.color = "var(--header-oldTheme-text-color)"
+      }
+    }
+
+  } else {
+    //如果使用header面板染色，则更新图标颜色 
+    if (settings.useOldTheme) {
+      for (let i = 0; i < areaBtns.length; i++) {
+        areaBtns[i].style.color &&= "var(--5f831aae)"
+      }
+
+    }
+  }
+}
 
 //定时更新头像和状态等
-const refreshDataT = setInterval(() => {
+const refreshDataT = setInterval(async () => {
   if (LiteLoader.os.platform === "darwin") {
     clearInterval(refreshDataT)
   }
 
-  if (location.hash.includes("#/main/message")||location.hash.includes('/main/contact/profile')) {
+  if (location.hash.includes("#/main/message") || location.hash.includes('/main/contact/profile')) {
     try {
-
-
       const styleWin = document.querySelector('.two-col-layout__main')?.style?.display == 'none' ? "none" : ''
-      //收缩侧栏按钮
-      const switchBtn = document.querySelector('path[d^="M6 3H12.4C12.6965"]')?.parentElement?.parentElement?.parentElement
-      //调整按钮颜色过亮的问题
-      switchBtn && (switchBtn.style.opacity='0.55')
-      //左上角按钮区域
-      const areaBtn = document.querySelector('.window-control-area')
-      //左上角按钮区域所有图标
-      const areaBtns = document.querySelectorAll('.window-control-area i')
 
       //none为小面板模式
       if (styleWin == 'none') {
-        //是否隐藏收缩侧栏按钮
-        switchBtn?.style && (settings.hideSwitchBtn && (switchBtn.style.display = 'none'))
-        //如果使用header面板染色，则更新图标颜色 
-        if (settings.useOldTheme) {
-          areaBtn?.style && (areaBtn.style.backgroundColor = "none!important")
-          for (let i = 0; i < areaBtns.length; i++) {
-            areaBtns[i].style.color = "var(--header-oldTheme-text-color)"
-          }
-        }
 
         //变换为小面板
-        if(!windowStyleMini){
-          windowStyleMini=true
+        if (!windowStyleMini) {
+          windowStyleMini = true
           nostalgic.updateStyleExt('mini')
-
+          settingsConfig = await nostalgic.getSettings();
         }
+        changeAreaBtn(settingsConfig)
 
       } else {
-        //是否隐藏收缩侧栏按钮
-        switchBtn?.style && (switchBtn.style.display = '')
-        //如果使用header面板染色，则更新图标颜色 
-        if (settings.useOldTheme) {
-          for (let i = 0; i < areaBtns.length; i++) {
-            areaBtns[i].style.color &&= "var(--5f831aae)"
-          }
 
-        }
         //变动为合并面板
-        if(windowStyleMini){
-          windowStyleMini=false
+        if (windowStyleMini) {
+          windowStyleMini = false
           nostalgic.updateStyleExt('Big')
-
+          settingsConfig = await nostalgic.getSettings();
         }
+        changeAreaBtn(settingsConfig)
       }
 
     } catch (error) {
@@ -257,8 +275,9 @@ const switchChange = (view, id, settings) => {
       settings[id] = true;
     }
     // 将修改后的settings保存到settings.json
-    console.log(settings[id], settings)
+    //console.log(settings[id], settings)
     nostalgic.setSettings(settings);
+    settingsConfig = settings;
     if (id == "isDebug") {
       nostalgic.setDebug(settings[id])
     }
@@ -279,6 +298,7 @@ const colorChange = (view, id, settings) => {
     settings[id] = event.target.value;
     // 将修改后的settings保存到settings.json
     nostalgic.setSettings(settings);
+    settingsConfig = settings;
   });
 }
 // 打开设置界面时触发
@@ -288,7 +308,7 @@ export const onSettingWindowCreated = async view => {
     //设置设置界面的图标
     setTimeout(() => {
       document.querySelectorAll(".nav-item.liteloader").forEach(node => {
-        log(node.textContent)
+        //log(node.textContent)
         if (node.textContent === "QQ怀旧模式") {
           node.classList.add("nostalgic")
           node.classList.add('appearance')
@@ -312,7 +332,10 @@ export const onSettingWindowCreated = async view => {
 
     // 获取设置
     const settings = await nostalgic.getSettings();
-
+    if (!settings.useOldTheme) {
+      const dom = view.querySelector('.nostalgic-header-config-ext')
+      dom.classList.contains('nostalgic-disabled') || dom.classList.add('nostalgic-disabled')
+    }
     // 颜色透明设置
     const backgroundOpacity = settings.backgroundOpacity;
     const pickOpacity = view.querySelector(".pick-opacity");
