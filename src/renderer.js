@@ -72,8 +72,8 @@ const onload = async () => {
     } else if (LiteLoader.os.platform === "darwin") {
       osType = "mac";
       //不支持mac
-      log('不支持macOS')
-      return
+      //log('不支持macOS')
+      //return
     }
 
     const findFuncMenuInterval = setInterval(async () => {
@@ -215,9 +215,9 @@ const changeAreaBtn = (settings) => {
 
 //定时更新头像和状态等
 const refreshDataT = setInterval(async () => {
-  if (LiteLoader.os.platform === "darwin") {
-    clearInterval(refreshDataT)
-  }
+  // if (LiteLoader.os.platform === "darwin") {
+  //   clearInterval(refreshDataT)
+  // }
 
   if (location.hash.includes("#/main/message") || location.hash.includes('/main/contact/profile')) {
     try {

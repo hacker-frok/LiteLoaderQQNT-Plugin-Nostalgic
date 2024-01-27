@@ -382,3 +382,17 @@ body .container .draggable-view__container.sidebar {
 .contact .contact-layout__content-area{
     height: calc(100vh - 100px)!important;
 }
+
+/**macOS***/
+
+body[q-platform="darwin"] .nostalgic-qq-icon{
+
+    left: 62px!important;
+    top: 5px;
+}
+body[q-platform="darwin"] .nostalgic-user-avatar{
+    margin-top: 15px!important;
+}
+body[q-platform="darwin"] .sidebar__upper {
+    padding-top: 30px!important;
+}
