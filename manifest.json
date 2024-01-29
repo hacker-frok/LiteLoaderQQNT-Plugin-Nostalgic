@@ -3,7 +3,7 @@
   "type": "extension",
   "name": "QQ怀旧模式",
   "slug": "nostalgic",
-  "description": "在小面板模式下，让QQNT变回旧版本QQ(非NT版本)的界面布局，小面板和常规面板自动切换QQ模，式让喜欢旧版QQ的朋友回味无穷",
+  "description": "在小面板模式下，让QQNT变回旧版本QQ(非NT版本)的界面布局，小面板和常规面板自动切换对应模式,让喜欢旧版QQ的朋友回味无穷",
   "version": "1.1.2",
   "icon": "./icon.png",
   "thumbnail": "./icon.png",
