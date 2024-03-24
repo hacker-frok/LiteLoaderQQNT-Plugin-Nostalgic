@@ -72,8 +72,9 @@ let settingsConfig = await nostalgic.getSettings();
 const html_header_file_path = `local:///${plugin_path}/src/settings/header.html`;
 
 let headerHTML = await (await fetch(html_header_file_path)).text();
-let onloadInit=false
+let onloadInit = false
 let headerInit = false
+let userinfoMain = {}
 const onload = async () => {
 
   if (window.location.href.includes("app://./renderer/index.html")) {
@@ -107,60 +108,56 @@ const onload = async () => {
           element.id = "nostalgic-style"
           document.head.appendChild(element);
           const updateHeader = (userinfo) => {
-            //替换用户信息
-            let headerHTMLUserinfo = headerHTML.slice().replace("{nickName}", userinfo?.nick)
-            headerHTMLUserinfo = headerHTMLUserinfo.replace("{bio}", userinfo?.longNick || '这家伙很懒,什么也没留下')
-            headerHTMLUserinfo = headerHTMLUserinfo.replace("{vip}", userinfo?.svipFlag ? 'svip' : (userinfo.vipFlag ? 'vip' : ''))
-            document.querySelector('.nostalgic-header-main') && document.querySelector('.nostalgic-header-main').remove()
-            !document.querySelector('.nostalgic-header-main') && (topbar.insertAdjacentHTML('afterbegin', headerHTMLUserinfo))
+            if (userinfo.nick != userinfoMain.nick || userinfo.longNick != userinfoMain.longNick) {
 
-            //左上角QQ图标事件监听
-            const qqBtn = document.querySelector('.nostalgic-qq-icon')
-            const sidebarLower = document.querySelector('.sidebar__lower')
-            qqBtn.addEventListener('click', (e) => {
-              if (sidebarLower?.style?.display == 'none') {
-                sidebarLower && (sidebarLower.style.display = '')
-              } else {
-                sidebarLower && (sidebarLower.style.display = 'none')
-              }
+              //替换用户信息
+              let headerHTMLUserinfo = headerHTML.slice().replace("{nickName}", userinfo?.nick)
+              headerHTMLUserinfo = headerHTMLUserinfo.replace("{bio}", userinfo?.longNick || '这家伙很懒,什么也没留下')
+              headerHTMLUserinfo = headerHTMLUserinfo.replace("{vip}", userinfo?.svipFlag ? 'svip' : (userinfo.vipFlag ? 'vip' : ''))
+              document.querySelector('.nostalgic-header-main') && document.querySelector('.nostalgic-header-main').remove()
+              !document.querySelector('.nostalgic-header-main') && (topbar.insertAdjacentHTML('afterbegin', headerHTMLUserinfo))
 
-
-            })
-
-            document.querySelector('.nostalgic-header-main').style.display = "unset"
-
-            //tab切换菜单
-            if (!headerInit) {
-              setTimeout(() => {
-                const buttons = document.querySelectorAll('.nostalgic-menu-tab .item');
-                buttons.forEach(button => {
-                  button.addEventListener('click', () => {
-                    if (!button.classList.contains('zone')) {
-                      buttons.forEach(button => {
-                        button.classList.remove('select');
-                      });
-                    }
-
-                    if (button.classList.contains('message')) {
-                      button.classList.add('select')
-                      document.querySelector("#app").__vue_app__.config.globalProperties.$router.replace("/main/message")
-                    }
-                    if (button.classList.contains('contact')) {
-                      button.classList.add('select')
-                      document.querySelector("#app").__vue_app__.config.globalProperties.$router.replace("/main/contact/profile")
-                    }
-                    if (button.classList.contains('zone')) {
-                      document.querySelector('.nav-item[aria-label="空间"]').click()
-                    }
+              //左上角QQ图标事件监听
+              const qqBtn = document.querySelector('.nostalgic-qq-icon')
+              const sidebarLower = document.querySelector('.sidebar__lower')
+              qqBtn.addEventListener('click', (e) => {
+                if (sidebarLower?.style?.display == 'none') {
+                  sidebarLower && (sidebarLower.style.display = '')
+                } else {
+                  sidebarLower && (sidebarLower.style.display = 'none')
+                }
 
 
-                  });
+              })
+
+              document.querySelector('.nostalgic-header-main').style.display = "unset"
+              const buttons = document.querySelectorAll('.nostalgic-menu-tab .item');
+              buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                  if (!button.classList.contains('zone')) {
+                    buttons.forEach(button => {
+                      button.classList.remove('select');
+                    });
+                  }
+
+                  if (button.classList.contains('message')) {
+                    button.classList.add('select')
+                    document.querySelector("#app").__vue_app__.config.globalProperties.$router.replace("/main/message")
+                  }
+                  if (button.classList.contains('contact')) {
+                    button.classList.add('select')
+                    document.querySelector("#app").__vue_app__.config.globalProperties.$router.replace("/main/contact/profile")
+                  }
+                  if (button.classList.contains('zone')) {
+                    document.querySelector('.nav-item[aria-label="空间"]').click()
+                  }
+
+
                 });
-              }, 1000)
-
+              });
+              userinfoMain = userinfo
+              headerInit = true
             }
-
-            headerInit = true
           }
 
           const updateUserinfoChange = debounce(updateHeader, 500);
@@ -211,7 +208,7 @@ const onload = async () => {
           } else {
             windowStyleMini = false
           }
-          onloadInit=true
+          onloadInit = true
           setTimeout(() => {
             nostalgic.updateStyleExt(windowStyleMini ? 'mini' : 'Big')
             updateMode()
@@ -266,7 +263,7 @@ const changeAreaBtn = (settings) => {
 }
 
 const updateMode = async () => {
-  if(!onloadInit)return
+  if (!onloadInit) return
   try {
     const styleWin = document.querySelector('.two-col-layout__main')?.style?.display == 'none' ? "none" : ''
 

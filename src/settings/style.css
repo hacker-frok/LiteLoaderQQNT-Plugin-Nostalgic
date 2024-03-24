@@ -10,8 +10,8 @@
     top: 26px;
     height: 150px;
     position: fixed;
-    z-index: 5;
-
+    z-index: 3;
+    pointer-events: none;
     display: none;
 }
 /*左上角QQ图标*/
@@ -133,7 +133,7 @@
     align-content: center;
     justify-content: space-around;
     position: absolute;
-
+    pointer-events: all;
     width: 100%;
     font-size: min(var(--font_size_3),18px);
     line-height: min(var(--line_height_3),24px);
