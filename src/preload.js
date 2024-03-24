@@ -7,6 +7,8 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld("nostalgic", {
 
     updateStyle: (callback) => ipcRenderer.on("LiteLoader.nostalgic.updateStyle", callback),
+    updateUserinfo: (callback) => ipcRenderer.on("LiteLoader.nostalgic.updateUserinfo", callback),
+    updateWindowResize: (callback) => ipcRenderer.on("LiteLoader.nostalgic.updateWindowResize", callback),
     updateStyleExt: (winStyle) => ipcRenderer.send("LiteLoader.nostalgic.updateStyleExt", winStyle),
     reSize: () => ipcRenderer.send("LiteLoader.nostalgic.reSize"),
     rendererReady: () => ipcRenderer.send("LiteLoader.nostalgic.rendererReady"),

@@ -1,20 +1,35 @@
-<!-- 左上角QQ图标 -->
-<div style="display:none;" class="nostalgic-qq-icon nostalgic-qq-icon "><i class="q-icon icon"><svg t="1705867520276" class="icon" fill="currentColor" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3650" width="14" height="14"><path d="M931.507451 840.8889c-23.05197 2.785996-89.719883-105.481862-89.719883-105.481862 0 62.689918-32.271958 144.493811-102.101866 203.571733 33.683956 10.383986 109.685856 38.33395 91.60588 68.84191-14.631981 24.685968-251.019672 15.761979-319.263582 8.07399-68.243911 7.68799-304.631601 16.611978-319.263582-8.07399-18.089976-30.49996 57.835924-58.427924 91.56588-68.82991-69.839909-59.077923-102.117866-140.889816-102.117866-203.583733 0 0-66.667913 108.267858-89.717883 105.481862-10.739986-1.299998-24.847967-59.287922 18.693975-199.407739 20.521973-66.047914 43.989942-120.955842 80.287895-211.557724C185.366427 196.125743 281.964301 0.012 512 0c227.473702 0.012 326.311573 192.265748 320.527581 429.925437 36.235953 90.445882 59.823922 145.699809 80.287894 211.555724 43.535943 140.119817 29.431961 198.105741 18.691976 199.407739z" p-id="3651"></path></svg></i></div>
-<!-- header面板 -->
-<div class="nostalgic-user-avatar user-avatar" style="opacity: 0;">
-    <div class="user-avatar-container nostalgic-user-container">
-        <div role="button" class="avatar user-avatar nostalgic-user-avatar-img">
-        </div>
-        <div class="icon icon-online avatar__status nostalgic-user-avatar__status" is-static="true" role="button"
-            style="width: 12px; height: 12px;">
-        </div>
+<div class="nostalgic-header-main" >
+    <!-- 左上角QQ图标 -->
+    <div style="display:none;" class="nostalgic-qq-icon nostalgic-qq-icon "><i class="q-icon icon"><svg
+                t="1705867520276" class="icon" fill="currentColor" viewBox="0 0 1024 1024" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" p-id="3650" width="14" height="14">
+                <path
+                    d="M931.507451 840.8889c-23.05197 2.785996-89.719883-105.481862-89.719883-105.481862 0 62.689918-32.271958 144.493811-102.101866 203.571733 33.683956 10.383986 109.685856 38.33395 91.60588 68.84191-14.631981 24.685968-251.019672 15.761979-319.263582 8.07399-68.243911 7.68799-304.631601 16.611978-319.263582-8.07399-18.089976-30.49996 57.835924-58.427924 91.56588-68.82991-69.839909-59.077923-102.117866-140.889816-102.117866-203.583733 0 0-66.667913 108.267858-89.717883 105.481862-10.739986-1.299998-24.847967-59.287922 18.693975-199.407739 20.521973-66.047914 43.989942-120.955842 80.287895-211.557724C185.366427 196.125743 281.964301 0.012 512 0c227.473702 0.012 326.311573 192.265748 320.527581 429.925437 36.235953 90.445882 59.823922 145.699809 80.287894 211.555724 43.535943 140.119817 29.431961 198.105741 18.691976 199.407739z"
+                    p-id="3651"></path>
+            </svg></i></div>
+    <!-- header面板 -->
+    <div class="nostalgic-user-avatar user-avatar" >
+        <div class="user-avatar-container nostalgic-user-container">
+            <div role="button" class="avatar user-avatar nostalgic-user-avatar-img">
+            </div>
+            <div class="icon icon-online avatar__status nostalgic-user-avatar__status" is-static="true" role="button"
+                style="width: 12px; height: 12px;">
+            </div>
 
-    </div>
-    <div class="nostalgic-user-info">
-        <div id="nostalgic-user-desc">
-            <div id="nostalgic-user-nickname">{nickName}</div>
-            <div class="nostalgic-user-vip">{vip}</div>
         </div>
-        <div id="nostalgic-user-signature">{bio}</div>
+        <div class="nostalgic-user-info">
+            <div id="nostalgic-user-desc">
+                <div id="nostalgic-user-nickname">{nickName}</div>
+                <div class="nostalgic-user-vip">{vip}</div>
+            </div>
+            <div id="nostalgic-user-signature">{bio}</div>
+        </div>
     </div>
+
+    <div class="nostalgic-menu-tab">
+        <div class="item message select">消息</div>
+        <div class="item contact">联系人</div>
+        <div class="item zone">空间</div>
+    </div>
+
 </div>

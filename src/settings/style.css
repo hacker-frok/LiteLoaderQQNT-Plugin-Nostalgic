@@ -5,7 +5,15 @@
 
 
 /* --------header面板----------- */
+.nostalgic-header-main{
+    width: 100%;
+    top: 26px;
+    height: 150px;
+    position: fixed;
+    z-index: 5;
 
+    display: none;
+}
 /*左上角QQ图标*/
 .nostalgic-qq-icon {
     float: left;
@@ -49,6 +57,7 @@
 }
 
 .nostalgic-user-container {
+    margin-left: 20px;
     width: 52px;
     height: 52px;
     display: flex;
@@ -105,50 +114,100 @@
     font-size: 12px;
     width: 100%;
     color: var(--header-oldTheme-text-color);
-
+    padding-right: 25px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-.container .contact-top-bar .search-input {
-	background: var(--fill_standard_secondary)!important;
-    .q-input__prefix .q-icon,
-    .q-input__inner::placeholder {
-        color: var(--header-oldTheme-text-color) !important;
-
-    }
-}
-.container .contact-top-bar .search-input .q-input__clear i,
-.container .contact-top-bar .search-input .q-input__inner{
-    color: var(--header-oldTheme-text-color) !important;
-
-}
-.container .contact-adder-btn {
-    .q-icon {
-        color: var(--header-oldTheme-text-color) !important;
-
-    }
 }
 
 .nostalgic-qq-icon .q-icon {
     color: var(--header-oldTheme-text-color) !important;
 }
 
-.contact-top-bar {
-    background-image: var(--header-oldTheme-color-linear);
-    min-height: 100px;
-    /* backdrop-filter: hue-rotate(23deg); */
-    /*
-    background-size: 500%;
-    animation: bgAnimation 1s linear infinite;*/
+.nostalgic-menu-tab{
+    height: 40px;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-around;
+    position: absolute;
+
+    width: 100%;
+    font-size: min(var(--font_size_3),18px);
+    line-height: min(var(--line_height_3),24px);
+    color: var(--text_primary);
+    top: 109px;
+    margin-top: 0px;
+    backdrop-filter: blur(115px);
+    background: var(--bg_nav);
+    z-index: 4;
+    box-shadow: inset 1px -1px 0 0 var(--border_standard);
+    &:hover{
+        .item::after{
+            content: '';
+            display: inline-block;
+            width: 100%;
+            height: 0;
+            border-width: 1px;
+            border-style: solid;
+            border-color: transparent;
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+        }
+    }
 }
 
+.contact-layout__content-area .contact-management-entrance{
+    margin-top: 40px;
+}
+
+.nostalgic-menu-tab .item{
+min-width: 80px;
+    cursor: pointer;
+    margin-top: 13px;
+    height: 30px;
+    text-align: center;
+    position: relative;
+    transition: all .3s ease-in-out;
+}
+.nostalgic-menu-tab .select::after{
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--global-brand_standard);
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+}
+.nostalgic-menu-tab .item:hover{
+    &::after{
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--global-brand_standard);
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    }
+}
+.message-panel .recent-contact .recent-contact-list{
+    padding-top: 38px;
+}
 /**********工具栏放底部***********/
 
 .container .sidebar .sidebar__lower{
     position: fixed!important;
     bottom: 0;
-    left:0; 
+    left:0;
     width: 100%!important;
     left: 0!important;
     display: flex;
@@ -180,7 +239,7 @@ body .container .draggable-view__container.sidebar {
     }
     .func-menu__item_wrap{
         padding:10px 0px;
-      
+
     }
 
 }
@@ -267,7 +326,41 @@ body .container .draggable-view__container.sidebar {
 
 
 /****其它调整***/
+
+.container .contact-top-bar .search-input {
+	background: var(--fill_standard_secondary)!important;
+    .q-input__prefix .q-icon,
+    .q-input__inner::placeholder {
+        color: var(--header-oldTheme-text-color) !important;
+
+    }
+}
+.container .contact-top-bar .search-input .q-input__clear i,
+.container .contact-top-bar .search-input .q-input__inner{
+    color: var(--header-oldTheme-text-color) !important;
+
+}
+.container .contact-adder-btn {
+    .q-icon {
+        color: var(--header-oldTheme-text-color) !important;
+
+    }
+}
+
+.contact-top-bar {
+    background-image: var(--header-oldTheme-color-linear);
+    min-height: 100px;
+
+}
+
+
+
+
+
+.container .contact-layout .contact-top-bar,
 .container .message-panel .contact-top-bar {
+    height: 135px;
+    padding-top: 103px;
     padding-left: 18px !important;
     padding-bottom: 8px;
     display: flex;
@@ -277,35 +370,46 @@ body .container .draggable-view__container.sidebar {
 
 
 }
-
-.message-panel .recent-contact .search-result {
-    top: 140px;
-}
-
-.message-panel .recent-contact .contact-adder-btn {
-    position: absolute;
-    top: 104px;
-    right: 7px;
-}
-
-.message-panel .recent-contact .main-search {
-    width: 95% !important;
-    ;
+.contact-layout .contact  .contact-top-bar .main-search{
+    width:  calc(100% - 20px) !important;
+    top: 102px;
     margin-left: -10px !important;
+
+}
+.message-panel .recent-contact  .contact-top-bar .main-search {
+    width:  calc(100% - 20px) !important;
+    top: 102px;
+    margin-left: -10px !important;
+
 }
 
-.contact-layout .contact-top-bar {
-    padding-top: 50px !important;
-    padding-bottom: 16px !important;
+.message-panel .recent-contact  .contact-top-bar .main-search .search-result {
+    top: 138px!important;
 }
 
-.contact-layout .contact-top-bar .main-search {
-    margin-left: 66px !important;
+.contact-layout .contact  .contact-top-bar .main-search .search-result{
+    top: 138px!important;
 }
 
-.contact-layout .contact-top-bar .search-result {
-    top: 100px !important;
+
+.message-panel .recent-contact  .contact-top-bar .contact-adder-btn {
+    position: absolute!important;
+    top: 100px!important;
+    right: 7px!important;
 }
+.contact-layout .contact  .contact-top-bar .contact-adder-btn{
+    position: absolute!important;
+    top: 100px!important;
+    right: 7px!important;
+}
+
+.sidebar-nav .nav-item[aria-label="消息"] ,
+.sidebar-nav .nav-item[aria-label="联系人"],
+.sidebar-nav .nav-item[aria-label="空间"]  {
+    display: none !important;
+}
+
+
 
 #nostalgic-leftTools {
     transition: all .3s ease-in-out;
@@ -360,7 +464,7 @@ body .container .draggable-view__container.sidebar {
     width: 100%;
 }
 .sidebar__nav_show{
-    top: calc(100vh - 280px)!important;
+    top: calc(100vh - 240px)!important;
   }
 /* .q-context-menu.q-context-menu__mixed-type .q-context-menu-item:last-child{
         display: none;
@@ -370,19 +474,19 @@ body .container .draggable-view__container.sidebar {
 }
 
 /**旧版本QQ处理**/
-.two-col-layout .search-result {
-    /* background: var(--bg_list)!important; */
+/* .two-col-layout .search-result {
+
     top: 140px!important;
     height: calc(100vh - 180px)!important;
 }
 .contact .search-result {
-    /* background: var(--bg_list)!important; */
+
     top:100px!important;;
     height: calc(100vh - 100px)!important;
 }
 .contact .contact-layout__content-area{
     height: calc(100vh - 100px)!important;
-}
+} */
 
 /**macOS***/
 

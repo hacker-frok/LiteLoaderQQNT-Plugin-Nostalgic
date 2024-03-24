@@ -196,19 +196,43 @@ module.exports.onBrowserWindowCreated = window => {
 
     const original_send = window.webContents.send;
     const patched_send = (channel, ...args) => {
+        //首次获取到的是登录用户的信息
         if (JSON.stringify(args).includes('nodeIKernelProfileListener/onProfileDetailInfoChanged')) {
-            //console.log(args?.[1]?.[0]?.payload.info,JSON.stringify(args?.[1]?.[0]?.payload))
-            userInfo = args?.[1]?.[0]?.payload.info
-            // log("用户信息更新",userInfo)
+            let updateUser = false
+            if (!userInfo) {
+                userInfo = args?.[1]?.[0]?.payload.info
+                updateUser = true
+            } else {
+                const userid = args?.[1]?.[0]?.payload?.info?.uid
+                if (userInfo.uid == userid) {
+                    userInfo = args?.[1]?.[0]?.payload.info
+                    updateUser = true
+                }
+            }
+            if (updateUser) {
+                if (mainWindow) {
+                    window.webContents.send(
+                        "LiteLoader.nostalgic.updateUserinfo",
+                        userInfo
+                    );
+                } else {
+                    webContents.getAllWebContents().forEach((webContent) => {
+                        webContent.send(
+                            "LiteLoader.nostalgic.updateUserinfo",
+                            userInfo
+                        );
+                    });
+                }
+            }
+
         }
         return original_send.call(window.webContents, channel, ...args);
     };
     window.webContents.send = patched_send;
+
     window.webContents.on("did-stop-loading", () => {
         if (window.webContents.getURL().indexOf("#/main/message") !== -1) {
-
             mainWindow = window;
-
             mainWindow.setMinimumSize(280, 600);
             //  mainWindow.setMaximumSize(400, 9999);
             // mainWindow.setResizable(false);

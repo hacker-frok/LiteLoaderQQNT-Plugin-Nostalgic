@@ -4,6 +4,20 @@ function log(...args) {
   console.log(`\x1b[35m[QQ怀旧模式]\x1b[0m`, ...args);
   nostalgic.logToMain(...args);
 }
+//防抖
+function debounce(func, delay) {
+  let timerId;
+  return function () {
+    const context = this;
+    const args = arguments;
+
+    clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
+
 let windowStyleMini = false
 //菜单按钮
 const BTN_MENU_HTML = `
@@ -55,12 +69,12 @@ const setExtBtn = () => {
 
 }
 let settingsConfig = await nostalgic.getSettings();
+const html_header_file_path = `local:///${plugin_path}/src/settings/header.html`;
 
+let headerHTML = await (await fetch(html_header_file_path)).text();
+let onloadInit=false
+let headerInit = false
 const onload = async () => {
-
-  const html_header_file_path = `local:///${plugin_path}/src/settings/header.html`;
-
-  let headerHTML = await (await fetch(html_header_file_path)).text();
 
   if (window.location.href.includes("app://./renderer/index.html")) {
     var osType = "";
@@ -76,40 +90,95 @@ const onload = async () => {
       //return
     }
 
-    const findFuncMenuInterval = setInterval(async () => {
 
-      if (location.hash.includes("#/main/message") && nostalgic.getProfileDetailInfo) {
-        const userinfo = await nostalgic.getProfileDetailInfo()
-        //还没获取到用户信息，跳出并继续
-        if (!userinfo) return
-        clearInterval(findFuncMenuInterval)
+    const allWinInterval = setInterval(() => {
+      const topbar = document.querySelector('.tab-container')
 
-        const topbar = document.querySelector('.contact-top-bar')
+      if (!topbar) return
+      clearInterval(allWinInterval)
+      if (location.hash.includes("#/main/message") || location.hash.includes("#/main/contact/profile")) {
         try {
 
+          //插入菜单按钮
           setExtBtn()
-
-          //log(JSON.stringify(userinfo))
-          //替换用户信息
-          headerHTML = headerHTML.replace("{nickName}", userinfo?.nick)
-          headerHTML = headerHTML.replace("{bio}", userinfo?.longNick || '这家伙很懒,什么也没留下')
-          headerHTML = headerHTML.replace("{vip}", userinfo?.svipFlag ? 'svip' : (userinfo.vipFlag ? 'vip' : ''))
 
           //插入js文件并写入css
           const element = document.createElement("style");
           element.id = "nostalgic-style"
           document.head.appendChild(element);
+          const updateHeader = (userinfo) => {
+            //替换用户信息
+            let headerHTMLUserinfo = headerHTML.slice().replace("{nickName}", userinfo?.nick)
+            headerHTMLUserinfo = headerHTMLUserinfo.replace("{bio}", userinfo?.longNick || '这家伙很懒,什么也没留下')
+            headerHTMLUserinfo = headerHTMLUserinfo.replace("{vip}", userinfo?.svipFlag ? 'svip' : (userinfo.vipFlag ? 'vip' : ''))
+            document.querySelector('.nostalgic-header-main') && document.querySelector('.nostalgic-header-main').remove()
+            !document.querySelector('.nostalgic-header-main') && (topbar.insertAdjacentHTML('afterbegin', headerHTMLUserinfo))
 
-          //监听主进程发来的消息
+            //左上角QQ图标事件监听
+            const qqBtn = document.querySelector('.nostalgic-qq-icon')
+            const sidebarLower = document.querySelector('.sidebar__lower')
+            qqBtn.addEventListener('click', (e) => {
+              if (sidebarLower?.style?.display == 'none') {
+                sidebarLower && (sidebarLower.style.display = '')
+              } else {
+                sidebarLower && (sidebarLower.style.display = 'none')
+              }
+
+
+            })
+
+            document.querySelector('.nostalgic-header-main').style.display = "unset"
+
+            //tab切换菜单
+            if (!headerInit) {
+              setTimeout(() => {
+                const buttons = document.querySelectorAll('.nostalgic-menu-tab .item');
+                buttons.forEach(button => {
+                  button.addEventListener('click', () => {
+                    if (!button.classList.contains('zone')) {
+                      buttons.forEach(button => {
+                        button.classList.remove('select');
+                      });
+                    }
+
+                    if (button.classList.contains('message')) {
+                      button.classList.add('select')
+                      document.querySelector("#app").__vue_app__.config.globalProperties.$router.replace("/main/message")
+                    }
+                    if (button.classList.contains('contact')) {
+                      button.classList.add('select')
+                      document.querySelector("#app").__vue_app__.config.globalProperties.$router.replace("/main/contact/profile")
+                    }
+                    if (button.classList.contains('zone')) {
+                      document.querySelector('.nav-item[aria-label="空间"]').click()
+                    }
+
+
+                  });
+                });
+              }, 1000)
+
+            }
+
+            headerInit = true
+          }
+
+          const updateUserinfoChange = debounce(updateHeader, 500);
+          //监听主进程发来的用户消息变更
+          nostalgic.updateUserinfo((event, userinfo) => {
+            updateUserinfoChange(userinfo)
+          });
+
+
+          //监听主进程发来的消息样式变更
           nostalgic.updateStyle((event, message) => {
-            // console.log('updateStyle---event-----')
             nostalgic.getSettings().then((config) => {
               if (config.useOldThemeMegList) {
                 message = message.replace("/*++", '').replace('++*/', '')
               }
               element.textContent = message;
               //在配置界面调整，强小面板模式
-              if (document.querySelector('.nostalgic-user-avatar') && window.outerWidth >= 400 && !message.includes('大面板')) {
+              if (document.querySelector('.nostalgic-header-main') && window.outerWidth >= 400 && !message.includes('大面板')) {
 
                 window.resizeTo(295, window.outerHeight < 650 ? 825 : window.outerHeight)
                 windowStyleMini = true
@@ -119,7 +188,6 @@ const onload = async () => {
 
                 nostalgic.getSettings().then((settings) => {
                   changeBtn(settings)
-                  //console.log(settings)
                   changeAreaBtn(settings)
 
                 })
@@ -128,23 +196,7 @@ const onload = async () => {
             });
 
           });
-          //左上角QQ图标事件监听
-          const qqT = setInterval(() => {
-            //插入header面板
-            !document.querySelector('.nostalgic-user-avatar') && (topbar.insertAdjacentHTML('afterbegin', headerHTML))
-            const qqBtn = document.querySelector('.nostalgic-qq-icon')
-            const sidebarLower = document.querySelector('.sidebar__lower')
-            if (!qqBtn) return
-            clearInterval(qqT)
-            qqBtn.addEventListener('click', (e) => {
-              if (sidebarLower?.style?.display == 'none') {
-                sidebarLower && (sidebarLower.style.display = '')
-              } else {
-                sidebarLower && (sidebarLower.style.display = 'none')
-              }
 
-            })
-          }, 500);
           changeAreaBtn(settingsConfig)
 
           nostalgic.rendererReady();
@@ -159,18 +211,18 @@ const onload = async () => {
           } else {
             windowStyleMini = false
           }
-
+          onloadInit=true
           setTimeout(() => {
             nostalgic.updateStyleExt(windowStyleMini ? 'mini' : 'Big')
+            updateMode()
           }, 100);
 
         } catch (error) {
           log("[渲染进程错误]", error);
         }
+
       }
-
-
-    }, 300)
+    }, 300);
 
   }
 }
@@ -213,47 +265,46 @@ const changeAreaBtn = (settings) => {
   }
 }
 
-//定时更新头像和状态等
-const refreshDataT = setInterval(async () => {
-  // if (LiteLoader.os.platform === "darwin") {
-  //   clearInterval(refreshDataT)
-  // }
+const updateMode = async () => {
+  if(!onloadInit)return
+  try {
+    const styleWin = document.querySelector('.two-col-layout__main')?.style?.display == 'none' ? "none" : ''
 
-  if (location.hash.includes("#/main/message") || location.hash.includes('/main/contact/profile')) {
-    try {
-      const styleWin = document.querySelector('.two-col-layout__main')?.style?.display == 'none' ? "none" : ''
+    //none为小面板模式
+    if (styleWin == 'none') {
 
-      //none为小面板模式
-      if (styleWin == 'none') {
-
-        //变换为小面板
-        if (!windowStyleMini) {
-          windowStyleMini = true
-          nostalgic.updateStyleExt('mini')
-          settingsConfig = await nostalgic.getSettings();
-        }
-        changeAreaBtn(settingsConfig)
-
-      } else {
-
-        //变动为合并面板
-        if (windowStyleMini) {
-          windowStyleMini = false
-          nostalgic.updateStyleExt('Big')
-          settingsConfig = await nostalgic.getSettings();
-        }
-        changeAreaBtn(settingsConfig)
+      //变换为小面板
+      if (!windowStyleMini) {
+        windowStyleMini = true
+        nostalgic.updateStyleExt('mini')
+        settingsConfig = await nostalgic.getSettings();
       }
+      changeAreaBtn(settingsConfig)
 
-    } catch (error) {
-      log(error)
+    } else {
+
+      //变动为合并面板
+      if (windowStyleMini) {
+        windowStyleMini = false
+        nostalgic.updateStyleExt('Big')
+        settingsConfig = await nostalgic.getSettings();
+      }
+      changeAreaBtn(settingsConfig)
     }
-  } else {
-    //clearInterval(refreshDataT)
+
+  } catch (error) {
+    log(error)
   }
+}
 
+const windowSizeChange = debounce(updateMode, 100);
+window.addEventListener('resize', function () {
+  if (location.hash.includes("#/main/message") || location.hash.includes("#/main/contact/profile")) {
+    windowSizeChange()
 
-}, 500)
+  }
+});
+
 
 
 /**********设置界面相关***********/
