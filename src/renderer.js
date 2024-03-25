@@ -148,12 +148,25 @@ const onload = async () => {
                     button.classList.add('select')
                     document.querySelector("#app").__vue_app__.config.globalProperties.$router.replace("/main/contact/profile")
                   }
+
+
+
                   if (button.classList.contains('zone')) {
                     document.querySelector('.nav-item[aria-label="空间"]').click()
                   }
 
 
                 });
+                button.addEventListener('dblclick', () => {
+                  if (button.classList.contains('message')) {
+                    document.querySelector('.recent-contact .list-toggler .recent-contact-list').scrollTop = 0;
+                  }
+                  if (button.classList.contains('contact')) {
+                    document.querySelector('.contact-layout__content-area .contact-list').scrollTop = 0;
+                    document.querySelector('.contact-layout__content-area').scrollTop = 0;
+                  }
+
+                })
               });
               userinfoMain = userinfo
               headerInit = true
