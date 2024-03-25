@@ -144,6 +144,7 @@
     background: var(--bg_nav);
     z-index: 4;
     box-shadow: inset 1px -1px 0 0 var(--border_standard);
+	transition: all .3s ease-in-out;
     &:hover{
         .item::after{
             content: '';
@@ -165,7 +166,7 @@
 }
 
 .nostalgic-menu-tab .item{
-min-width: 80px;
+min-width: 70px;
     cursor: pointer;
     margin-top: 13px;
     height: 30px;
@@ -183,6 +184,7 @@ min-width: 80px;
     border-color: var(--global-brand_standard);
     position: absolute;
     bottom: 2px;
+	transition: all .3s ease-in-out;
     left: 0;
 }
 .nostalgic-menu-tab .item:hover{
@@ -197,10 +199,17 @@ min-width: 80px;
     position: absolute;
     bottom: 2px;
     left: 0;
+	transition: all .3s ease-in-out;
     }
 }
 .message-panel .recent-contact .recent-contact-list{
-    padding-top: 38px;
+    padding-top: 40px;
+}
+.message-panel .recent-contact .group-assistent-list{
+	  padding-top: 40px;
+}
+.message-panel .recent-contact .group-assistent-list .recent-contact-list{
+    padding-top: 0px;
 }
 /**********工具栏放底部***********/
 
@@ -384,11 +393,13 @@ body .container .draggable-view__container.sidebar {
 }
 
 .message-panel .recent-contact  .contact-top-bar .main-search .search-result {
-    top: 138px!important;
+	height:calc(100vh - 180px);
+    top: 135px!important;
 }
 
 .contact-layout .contact  .contact-top-bar .main-search .search-result{
-    top: 138px!important;
+	height:calc(100vh - 180px);
+    top: 135px!important;
 }
 
 

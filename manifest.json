@@ -4,7 +4,7 @@
   "name": "QQ怀旧模式",
   "slug": "nostalgic",
   "description": "让QQNT变回旧版本QQ(非NT版本)的界面布局，小面板和常规面板自动切换对应模式,让喜欢旧版QQ的朋友回味无穷(各位常觉得好用的给个star( ^_^ )).",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "icon": "./icon.png",
   "thumbnail": "./icon.png",
   "authors": [
@@ -17,7 +17,7 @@
     "repo": "hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic",
     "branch": "main",
     "release": {
-      "tag": "1.1.5"
+      "tag": "1.1.6"
     }
   },
   "platform": [
