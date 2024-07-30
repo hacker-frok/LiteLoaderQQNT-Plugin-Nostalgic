@@ -256,6 +256,13 @@ const changeAreaBtn = (settings) => {
   //右上角按钮区域所有图标
   const areaBtns = document.querySelectorAll('.window-control-area i')
   if (windowStyleMini) {
+     // 检查是否存在.qq-logo元素
+    let qqLogo = document.querySelector('.sidebar-nav .sidebar__upper .qq-logo');
+    if (qqLogo) {
+        // 如果存在，给.sidebar__upper添加一个特定的类
+        let sidebarUpper = document.querySelector('.sidebar-nav .sidebar__upper');
+        sidebarUpper.classList.add('sidebar__upper--with-logo');
+    }
     //如果使用header面板染色，则更新图标颜色
     if (settings.useOldTheme) {
       areaBtn?.style && (areaBtn.style.backgroundColor = "none!important")
