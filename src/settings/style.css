@@ -3,7 +3,12 @@
     top: 3px;
 }
 
-
+.sidebar-nav .sidebar__upper .qq-logo {
+    display: none!important;
+}
+.sidebar-nav .sidebar__upper.sidebar__upper--with-logo .sidebar__avatar {
+    margin-top: 8px;
+}
 /* --------header面板----------- */
 .nostalgic-header-main{
     width: 100%;
