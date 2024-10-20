@@ -196,35 +196,61 @@ module.exports.onBrowserWindowCreated = window => {
 
     const original_send = window.webContents.send;
     const patched_send = (channel, ...args) => {
+        let cmd = args?.[1]?.[0]?.cmdName
+        let myInfo = {}
+        let updateUser = false
         //首次获取到的是登录用户的信息
-        if (JSON.stringify(args).includes('nodeIKernelProfileListener/onProfileDetailInfoChanged')) {
-            let updateUser = false
+        if (cmd == 'nodeIKernelProfileListener/onProfileDetailInfoChanged') {
+            let newUserInfo = args?.[1]?.[0]?.payload?.info
+            if (!newUserInfo) {
+                userInfo = null
+            }
             if (!userInfo) {
-                userInfo = args?.[1]?.[0]?.payload.info
+                userInfo = newUserInfo
                 updateUser = true
             } else {
-                const userid = args?.[1]?.[0]?.payload?.info?.uid
+                const userid = newUserInfo?.uid
                 if (userInfo.uid == userid) {
-                    userInfo = args?.[1]?.[0]?.payload.info
+                    userInfo = newUserInfo
                     updateUser = true
                 }
             }
-            if (updateUser) {
-                if (mainWindow) {
-                    window.webContents.send(
+        } else if (cmd == "onProfileSimpleChanged") {
+            let profiles = args?.[1]?.[0]?.payload.profiles
+            let infos = []
+            for (const [_, info] of Object.entries(profiles)) {
+                infos.push(info)
+            }
+            if (infos.length == 1) {
+                // TODO: 没找到稳定的方法来获取用户信息，靠猜：如果 profiles 只有一条的话，可能是用户自己。
+                log(`QQ：${infos[0].uin}，用户名：${infos[0].coreInfo.nick}`)
+                myInfo.uid = infos[0].uid
+                myInfo.uin = infos[0].uin
+                myInfo.nick = infos[0].coreInfo.nick
+                myInfo.longNick = infos[0].baseInfo.longNick
+                myInfo.svipFlag = infos[0].vasInfo.svipFlag
+                myInfo.vipFlag = infos[0].vasInfo.vipFlag
+                // 过滤掉服务号等空用户名
+                if (myInfo.nick) {
+                    updateUser = true
+                }
+                userInfo = myInfo
+            }
+        }
+        if (userInfo && updateUser) {
+            if (mainWindow) {
+                window.webContents.send(
+                    "LiteLoader.nostalgic.updateUserinfo",
+                    userInfo
+                );
+            } else {
+                webContents.getAllWebContents().forEach((webContent) => {
+                    webContent.send(
                         "LiteLoader.nostalgic.updateUserinfo",
                         userInfo
                     );
-                } else {
-                    webContents.getAllWebContents().forEach((webContent) => {
-                        webContent.send(
-                            "LiteLoader.nostalgic.updateUserinfo",
-                            userInfo
-                        );
-                    });
-                }
+                });
             }
-
         }
         return original_send.call(window.webContents, channel, ...args);
     };
