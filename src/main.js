@@ -209,8 +209,7 @@ module.exports.onBrowserWindowCreated = window => {
                 userInfo = newUserInfo
                 updateUser = true
             } else {
-                const userid = newUserInfo?.uid
-                if (userInfo.uid == userid) {
+                if (userInfo.uid == newUserInfo?.uid) {
                     userInfo = newUserInfo
                     updateUser = true
                 }
