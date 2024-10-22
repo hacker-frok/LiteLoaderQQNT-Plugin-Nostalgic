@@ -194,7 +194,10 @@ const onload = async () => {
               if (config.useOldThemeMegList) {
                 message = message.replace("/*++", '').replace('++*/', '')
               }
-             
+              if (config.whiteSwitchBtn) {
+                message = message.replace("/*99", '').replace('99*/', '')
+              }
+              
               element.textContent = message;
               //在配置界面调整，强小面板模式
               if (document.querySelector('.nostalgic-header-main') && window.outerWidth >= 400 && !message.includes('大面板')) {
@@ -233,8 +236,13 @@ const onload = async () => {
           onloadInit = true
           setTimeout(() => {
             nostalgic.updateStyleExt(windowStyleMini ? 'mini' : 'Big')
-            updateMode()
-          }, 100);
+            setTimeout(()=>{
+              updateMode()
+            },50)
+           
+          }, 250);
+
+        
 
         } catch (error) {
           log("[渲染进程错误]", error);
@@ -254,6 +262,12 @@ const changeBtn = (settings) => {
   //调整按钮颜色过亮的问题
   switchBtn && (switchBtn.style.opacity = '0.55')
   switchBtn?.style && (settings.hideSwitchBtn ? (switchBtn.style.display = 'none') : (switchBtn.style.display = ''))
+
+  //新版折叠按钮
+  const switchBtnNew = document.querySelector('.narrow-toggler')
+  switchBtnNew?.style && (settings.hideSwitchBtn ? (switchBtnNew.style.display = 'none') : (switchBtnNew.style.display = ''))
+
+  
 }
 
 
@@ -327,7 +341,6 @@ const windowSizeChange = debounce(updateMode, 100);
 window.addEventListener('resize', function () {
   if (location.hash.includes("#/main/message") || location.hash.includes("#/main/contact/profile")) {
     windowSizeChange()
-
   }
 });
 
@@ -430,7 +443,7 @@ export const onSettingWindowCreated = async view => {
       colorChange(view, id, settings)
     })
     //配置设置
-    const switchSettingList = ['useOldTheme', 'useOldThemeWin', 'hideSwitchBtn', 'useOldThemeMegList','addQzoneTab']
+    const switchSettingList = ['useOldTheme', 'useOldThemeWin', 'hideSwitchBtn', 'useOldThemeMegList','addQzoneTab','whiteSwitchBtn']
     switchSettingList.forEach((id) => {
       switchChange(view, id, settings)
     })

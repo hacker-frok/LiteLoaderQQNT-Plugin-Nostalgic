@@ -521,3 +521,12 @@ body[q-platform="darwin"] .sidebar__upper {
 div.q-tooltips-v2:has(.mail-item__tips) {
     transform: translateY(-40px);
 }
+
+/*白色折叠按钮**/
+
+/*99
+.window-control-area .narrow-toggler>img {
+    filter: invert(1);
+    opacity: 0.5;
+}
+99*/

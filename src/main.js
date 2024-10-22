@@ -84,7 +84,8 @@ if (!fs.existsSync(settingsPath)) {
         "useOldThemeWin": true,
         "hideSwitchBtn": true,
         "useOldThemeMegList": false,
-        "addQzoneTab": true
+        "addQzoneTab": true,
+        "whiteSwitchBtn":true
     }));
 } else {
 
@@ -123,6 +124,11 @@ if (!fs.existsSync(settingsPath)) {
         config.addQzoneTab = true;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
+    if (config.whiteSwitchBtn == undefined || config.whiteSwitchBtn == null) {
+        config.whiteSwitchBtn = true;
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
+    
     if (config.hideSwitchBtn == undefined || config.hideSwitchBtn == null) {
         config.hideSwitchBtn = true;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
