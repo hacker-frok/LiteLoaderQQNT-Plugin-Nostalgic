@@ -489,6 +489,11 @@ body .container .draggable-view__container.sidebar {
     display: none;
 }
 
+/* 邮件 Tooltip 会遮挡图标，上移一下 */
+body > div.q-tooltips-v2.q-tooltips-v2--pos-right.q-tooltips-v2--fill-gap.q-float-card {
+    transform: translateY(-40px);
+}
+
 /**旧版本QQ处理**/
 /* .two-col-layout .search-result {
 
