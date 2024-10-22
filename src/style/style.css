@@ -317,11 +317,14 @@ body .container .draggable-view__container.sidebar {
 .message-panel .list-item{
     height: 64px;
 }
-.message-panel .recent-contact-item--top .list-item__container {
+.message-panel .recent-contact-item--top .list-item__container,
+.message-panel .recent-contact-item--top .item__content
+{
     background: none !important;
 }
 
-.message-panel .list-item.recent-contact-item--top::after {
+.message-panel .list-item.recent-contact-item--top::after,
+.message-panel .recent-contact-item--top::after {
     content: '';
     display: inline-block;
     width: 0;
