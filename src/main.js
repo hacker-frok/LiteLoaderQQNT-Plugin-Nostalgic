@@ -23,9 +23,9 @@ function updateStyle(winStyle) {
         const themeColor3 = config.themeColor3;
         const textOpacity = config.backgroundOpacity / 100;
         const textOpacityHex = Math.round(config.backgroundOpacity * 2.55).toString(16).padStart(2, "0");
-        let csspath = path.join(__dirname, "/settings/style.css");
+        let csspath = path.join(__dirname, "/style/style.css");
         if (winStyle == 'Big') {
-            csspath = path.join(__dirname, "/settings/styleBig.css");
+            csspath = path.join(__dirname, "/style/styleBig.css");
         }
         fs.readFile(csspath, "utf-8", (err, data) => {
             if (err) {
@@ -83,7 +83,8 @@ if (!fs.existsSync(settingsPath)) {
         "isDebug": false,
         "useOldThemeWin": true,
         "hideSwitchBtn": true,
-        "useOldThemeMegList": false
+        "useOldThemeMegList": false,
+        "addQzoneTab": true
     }));
 } else {
 
@@ -118,7 +119,10 @@ if (!fs.existsSync(settingsPath)) {
         config.useOldThemeMegList = true;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
     }
-
+    if (config.addQzoneTab == undefined || config.addQzoneTab == null) {
+        config.addQzoneTab = true;
+        fs.writeFileSync(settingsPath, JSON.stringify(config));
+    }
     if (config.hideSwitchBtn == undefined || config.hideSwitchBtn == null) {
         config.hideSwitchBtn = true;
         fs.writeFileSync(settingsPath, JSON.stringify(config));
@@ -228,7 +232,7 @@ module.exports.onBrowserWindowCreated = window => {
         }
         return original_send.call(window.webContents, channel, ...args);
     };
-    window.webContents.send = patched_send;
+    //window.webContents.send = patched_send;
 
     window.webContents.on("did-stop-loading", () => {
         if (window.webContents.getURL().indexOf("#/main/message") !== -1) {

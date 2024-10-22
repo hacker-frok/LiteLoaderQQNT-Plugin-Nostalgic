@@ -69,12 +69,12 @@ const setExtBtn = () => {
 
 }
 let settingsConfig = await nostalgic.getSettings();
-const html_header_file_path = `local:///${plugin_path}/src/settings/header.html`;
+const html_header_file_path = `local:///${plugin_path}/src/template/header.html`;
 
 let headerHTML = await (await fetch(html_header_file_path)).text();
 let onloadInit = false
 let headerInit = false
-let userinfoMain = {}
+
 const onload = async () => {
 
   if (window.location.href.includes("app://./renderer/index.html")) {
@@ -94,8 +94,9 @@ const onload = async () => {
 
     const allWinInterval = setInterval(() => {
       const topbar = document.querySelector('.tab-container')
-
-      if (!topbar) return
+      let myuid=app?.__vue_app__?.config?.globalProperties?.$store?.state?.common_Auth?.authData?.uid
+      let simpleInfo=app?.__vue_app__?.config?.globalProperties?.$store?.state?.common_Contact_buddy?.buddyMap[myuid]
+      if (!topbar||!simpleInfo?.coreInfo) return
       clearInterval(allWinInterval)
       if (location.hash.includes("#/main/message") || location.hash.includes("#/main/contact/profile")) {
         try {
@@ -108,12 +109,15 @@ const onload = async () => {
           element.id = "nostalgic-style"
           document.head.appendChild(element);
           const updateHeader = (userinfo) => {
-            if (userinfo.nick != userinfoMain.nick || userinfo.longNick != userinfoMain.longNick) {
-
+            if (userinfo?.coreInfo?.nick) {
+              if (!settingsConfig.addQzoneTab) {
+                headerHTML=headerHTML.slice().replace('<div class="item zone">空间</div>', '')
+              }
+              
               //替换用户信息
-              let headerHTMLUserinfo = headerHTML.slice().replace("{nickName}", userinfo?.nick)
-              headerHTMLUserinfo = headerHTMLUserinfo.replace("{bio}", userinfo?.longNick || '这家伙很懒,什么也没留下')
-              headerHTMLUserinfo = headerHTMLUserinfo.replace("{vip}", userinfo?.svipFlag ? 'svip' : (userinfo.vipFlag ? 'vip' : ''))
+              let headerHTMLUserinfo = headerHTML.slice().replace("{nickName}", userinfo?.coreInfo?.nick)
+              headerHTMLUserinfo = headerHTMLUserinfo.replace("{bio}", userinfo?.baseInfo?.longNick || '这家伙很懒,什么也没留下')
+              headerHTMLUserinfo = headerHTMLUserinfo.replace("{vip}", userinfo?.vasInfo?.svipFlag ? 'svip' : (userinfo?.vasInfo?.vipFlag ? 'vip' : ''))
               document.querySelector('.nostalgic-header-main') && document.querySelector('.nostalgic-header-main').remove()
               !document.querySelector('.nostalgic-header-main') && (topbar.insertAdjacentHTML('afterbegin', headerHTMLUserinfo))
 
@@ -168,24 +172,29 @@ const onload = async () => {
 
                 })
               });
-              userinfoMain = userinfo
+
               headerInit = true
             }
           }
 
-          const updateUserinfoChange = debounce(updateHeader, 500);
-          //监听主进程发来的用户消息变更
-          nostalgic.updateUserinfo((event, userinfo) => {
-            updateUserinfoChange(userinfo)
-          });
-
-
+          // const updateUserinfoChange = debounce(updateHeader, 500);
+          // //监听主进程发来的用户消息变更
+          // nostalgic.updateUserinfo((event, userinfo) => {
+          //   updateUserinfoChange(userinfo)
+          // });
+      
+       
+          console.log(simpleInfo?.coreInfo,simpleInfo?.baseInfo)
+          updateHeader(simpleInfo)
+     
+         
           //监听主进程发来的消息样式变更
           nostalgic.updateStyle((event, message) => {
             nostalgic.getSettings().then((config) => {
               if (config.useOldThemeMegList) {
                 message = message.replace("/*++", '').replace('++*/', '')
               }
+             
               element.textContent = message;
               //在配置界面调整，强小面板模式
               if (document.querySelector('.nostalgic-header-main') && window.outerWidth >= 400 && !message.includes('大面板')) {
@@ -256,6 +265,13 @@ const changeAreaBtn = (settings) => {
   //右上角按钮区域所有图标
   const areaBtns = document.querySelectorAll('.window-control-area i')
   if (windowStyleMini) {
+     // 检查是否存在.qq-logo元素
+    let qqLogo = document.querySelector('.sidebar-nav .sidebar__upper .qq-logo');
+    if (qqLogo) {
+        // 如果存在，给.sidebar__upper添加一个特定的类
+        let sidebarUpper = document.querySelector('.sidebar-nav .sidebar__upper');
+        sidebarUpper.classList.add('sidebar__upper--with-logo');
+    }
     //如果使用header面板染色，则更新图标颜色
     if (settings.useOldTheme) {
       areaBtn?.style && (areaBtn.style.backgroundColor = "none!important")
@@ -414,7 +430,7 @@ export const onSettingWindowCreated = async view => {
       colorChange(view, id, settings)
     })
     //配置设置
-    const switchSettingList = ['useOldTheme', 'useOldThemeWin', 'hideSwitchBtn', 'useOldThemeMegList']
+    const switchSettingList = ['useOldTheme', 'useOldThemeWin', 'hideSwitchBtn', 'useOldThemeMegList','addQzoneTab']
     switchSettingList.forEach((id) => {
       switchChange(view, id, settings)
     })
