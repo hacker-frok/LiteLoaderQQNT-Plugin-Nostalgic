@@ -27,7 +27,7 @@
 
 - 首次安装启动时，默认不会有任何效果，因为默认不是小面板模板，可以点击右上角的折叠按钮，立即查看效果
 
-- 可以在设置界面设置为默认小面板默念，让QQ默认是怀旧模式
+- 可以在设置界面设置为默认小面板模板，让QQ默认是怀旧模式
 
 ## 效果
 
@@ -49,3 +49,8 @@
 - [ ] 快捷修改昵称、签名
 - [ ] 类似旧版QQ的独立消息窗口合并
 - [ ] 记忆会话窗口打开位置
+
+## ⭐ Star 历史
+
+[![Stargazers over time](https://starchart.cc/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic.svg?variant=adaptive)]([https://starchart.cc/WJZ-P/LiteLoaderQQNT-Echo-Message](https://github.com/hacker-frok/LiteLoaderQQNT-Plugin-Nostalgic))
+<!-- links -->
